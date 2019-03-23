@@ -49,12 +49,18 @@ import (
 	"os"
 )
 
+// Type of flags passed to the libclimate.Init() method
 type InitFlag int
 
+// Type of flags passed to the libclimate.Parse() method
 type ParseFlag int
 
+// Type of flags passed to the libclimate.AddAlias(), libclimate.AddFlag(),
+// and libclimate.AddOption() methods
 type AliasFlag int
 
+// Structure representing a CLI parsing context, obtained from
+// libclimate.Init()
 type Climate struct {
 
 	Aliases		[]clasp.Alias
@@ -63,6 +69,7 @@ type Climate struct {
 	InfoLines	[]string
 }
 
+// Structure representing CLI results, obtained from Climate.Parse()
 type Result struct {
 
 	Flags		[]*clasp.Argument
@@ -74,6 +81,7 @@ type Result struct {
 	arguments	*clasp.Arguments
 }
 
+// Callback function for specification of Climate via DSL
 type InitFunc func(cl *Climate) error
 
 const (
@@ -87,10 +95,12 @@ const (
 const (
 
 	ParseFlag_None				ParseFlag	=	1 << iota
-	ParseFlag_PanicOnFailure		ParseFlag	=	1 << iota
-	ParseFlag_DontCheckUnused		ParseFlag	=	1 << iota
+	ParseFlag_PanicOnFailure	ParseFlag	=	1 << iota
+	ParseFlag_DontCheckUnused	ParseFlag	=	1 << iota
 )
 
+// Initialises a Climate instance, according to the given function (which
+// may not be nil) and arguments
 func Init(initFn InitFunc, args ...interface{}) (climate *Climate, err error) {
 
 	climate	=	&Climate{
@@ -113,21 +123,26 @@ func Init(initFn InitFunc, args ...interface{}) (climate *Climate, err error) {
 	return
 }
 
+// Adds an alias to the Climate instance
 func (cl *Climate) AddAlias(alias clasp.Alias, flags ...AliasFlag) {
 
 	cl.Aliases = append(cl.Aliases, alias)
 }
 
+// Adds a flag to the Climate instance
 func (cl *Climate) AddFlag(flag clasp.Alias, flags ...AliasFlag) {
 
 	cl.Aliases = append(cl.Aliases, flag)
 }
 
+// Adds an option to the Climate instance
 func (cl *Climate) AddOption(option clasp.Alias, flags ...AliasFlag) {
 
 	cl.Aliases = append(cl.Aliases, option)
 }
 
+// Parses a command line, obtaining a Result instance representing the
+// arguments received by the process
 func (cl Climate) Parse(argv []string, args ...interface{}) (result Result, err error) {
 
 	parse_params := clasp.ParseParams {
@@ -168,6 +183,8 @@ func (cl Climate) Parse(argv []string, args ...interface{}) (result Result, err 
 	return
 }
 
+// Verifies that all given arguments received are recognised according to
+// the specified flags and options
 func (result Result) Verify(args ...interface{}) {
 
 	if unused := result.arguments.GetUnusedFlagsAndOptions(); 0 != len(unused) {
@@ -178,6 +195,10 @@ func (result Result) Verify(args ...interface{}) {
 	}
 }
 
+// Parses via Parse() and verifies via Verify()
+//
+// Panics, rather than returns, if the ParseFlag_PanicOnFailure flag is
+// specified
 func (cl Climate) ParseAndVerify(argv []string, args ...interface{}) (result Result, err error) {
 
 	result, err = cl.Parse(argv, args...)
@@ -192,11 +213,21 @@ func (cl Climate) ParseAndVerify(argv []string, args ...interface{}) (result Res
 	}
 }
 
+// Determines if the given flag is specified
 func (result Result) FlagIsSpecified(id interface{}) bool {
 
 	return result.arguments.FlagIsSpecified(id)
 }
 
+// Looks for a flag with the given id - name, or the alias instance - and
+// returns it and the value true if found; if not, returns nil and false
+func (result Result) LookupFlag(id interface{}) (*clasp.Argument, bool) {
+
+	return result.arguments.LookupFlag(id)
+}
+
+// Looks for an option with the given id - name, or the alias instance - and
+// returns it and the value true if found; if not, returns nil and false
 func (result Result) LookupOption(id interface{}) (*clasp.Argument, bool) {
 
 	return result.arguments.LookupOption(id)
