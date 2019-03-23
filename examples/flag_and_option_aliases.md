@@ -35,8 +35,6 @@ func main() {
 		cl.AddOption(option_Verbosity)
 		cl.AddAlias(flag_Chatty)
 
-		cl.ParseFlags = 0
-
 		cl.Version = "0.0.1"
 
 		cl.InfoLines = []string { "libCLImate.Go Examples", "", ":version:", "" }

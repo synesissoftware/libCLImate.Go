@@ -25,8 +25,6 @@ func main() {
 
 	climate, err := libclimate.Init(func (cl *libclimate.Climate) (err error) {
 
-		cl.ParseFlags = 0
-
 		cl.Version = "0.0.1"
 
 		cl.InfoLines = []string { "libCLImate.Go Examples", "", ":version:", "" }
