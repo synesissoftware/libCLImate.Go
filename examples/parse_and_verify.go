@@ -1,4 +1,4 @@
-// examples/flag_and_option_aliases.go
+// examples/parse_and_verify.go
 
 package main
 
@@ -19,11 +19,19 @@ func main() {
 	option_Verbosity	:=	clasp.Alias{ clasp.OptionType, "--verbosity", []string{ "-v" }, "specifies the verbosity", []string{ "terse", "quiet", "silent", "chatty" }, 0, nil }
 	flag_Chatty			:=	clasp.Alias{ clasp.FlagType, "--verbosity=chatty", []string{ "-c" }, "", nil, 0, nil }
 
+	is_debug			:=	false
+	verbosity			:=	""
 
 	climate, err := libclimate.Init(func (cl *libclimate.Climate) (err error) {
 
-		cl.AddFlag(flag_Debug)
-		cl.AddOption(option_Verbosity)
+		cl.AddFlagFunc(flag_Debug, func() {
+
+			is_debug = true
+		})
+		cl.AddOptionFunc(option_Verbosity, func (o *clasp.Argument, a *clasp.Alias) {
+
+			verbosity = o.Value
+		})
 		cl.AddAlias(flag_Chatty)
 
 		cl.Version = "0.0.1"
@@ -37,30 +45,25 @@ func main() {
 		fmt.Fprintf(os.Stderr, "failed to create CLI parser: %v\n", err)
 	}
 
-	result, _ := climate.Parse(os.Args, libclimate.ParseFlag_PanicOnFailure)
-	if err != nil {
-
-		panic(err)
-	}
+	_, _ = climate.ParseAndVerify(os.Args, libclimate.ParseFlag_PanicOnFailure)
 
 
 	// Program-specific processing of flags/options
 
-	if opt, found := result.LookupOption("--verbosity"); found {
+	if 0 != len(verbosity) {
 
-		fmt.Printf("verbosity is specified as: %s\n", opt.Value)
+		fmt.Printf("verbosity is specified as: %s\n", verbosity)
 	}
 
-	if result.FlagIsSpecified("--debug") {
+	if is_debug {
 
 		fmt.Printf("Debug mode is specified\n")
 	}
-
-	result.Verify(libclimate.ParseFlag_PanicOnFailure)
 
 
 	// Finish normal processing
 
 	return
 }
+
 

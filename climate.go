@@ -63,10 +63,12 @@ type AliasFlag int
 // libclimate.Init()
 type Climate struct {
 
-	Aliases		[]clasp.Alias
+	Aliases		[]*clasp.Alias
 	ParseFlags	clasp.ParseFlag
 	Version		interface{}
 	InfoLines	[]string
+
+	initFlags_	InitFlag
 }
 
 // Structure representing CLI results, obtained from Climate.Parse()
@@ -84,6 +86,10 @@ type Result struct {
 // Callback function for specification of Climate via DSL
 type InitFunc func(cl *Climate) error
 
+type FlagFunc func()
+
+type OptionFunc func(option *clasp.Argument, alias *clasp.Alias)
+
 const (
 
 	InitFlag_None				InitFlag	=	1 << iota
@@ -99,46 +105,105 @@ const (
 	ParseFlag_DontCheckUnused	ParseFlag	=	1 << iota
 )
 
+const (
+
+	_libCLImate_FlagFunc	=	"_libCLImate_FlagFunc_F73BB1C0_92D7_4cd5_9C36_DB672290CBE7"
+	_libCLImate_OptionFunc	=	"_libCLImate_OptionFunc_F73BB1C0_92D7_4cd5_9C36_DB672290CBE7"
+)
+
+/* /////////////////////////////////////////////////////////////////////////
+ * helper functions
+ */
+
+func parseInitFlags(args ...interface{}) (result InitFlag, err error) {
+
+	return
+}
+
+func pointer_aliases_to_value_aliases(input []*clasp.Alias) (result []clasp.Alias) {
+
+	result	=	make([]clasp.Alias, len(input))
+
+	for i, a := range(input) {
+
+		result[i] = *a
+	}
+
+	return
+}
+
+/* /////////////////////////////////////////////////////////////////////////
+ * API functions
+ */
+
 // Initialises a Climate instance, according to the given function (which
 // may not be nil) and arguments
 func Init(initFn InitFunc, args ...interface{}) (climate *Climate, err error) {
 
-	climate	=	&Climate{
+	initFlags, err := parseInitFlags(args...)
 
-		Aliases: []clasp.Alias { },
+	if err != nil {
+
+		return
 	}
 
-	if true {
+	climate	=	&Climate{
 
-		climate.Aliases = append(climate.Aliases, clasp.HelpFlag())
-		climate.Aliases = append(climate.Aliases, clasp.VersionFlag())
+		Aliases: []*clasp.Alias { },
+		initFlags_: initFlags,
+	}
+
+	if 0 == (initFlags & InitFlag_NoHelpFlag) {
+
+		climate.AddFlag(clasp.HelpFlag())
+	}
+
+	if 0 == (initFlags & InitFlag_NoVersionFlag) {
+
+		climate.AddFlag(clasp.VersionFlag())
 	}
 
 	err = initFn(climate)
 
-	if err == nil {
+	if err != nil {
 
 	}
 
 	return
 }
 
-// Adds an alias to the Climate instance
+// Adds a (copy of the) alias to the Climate instance
 func (cl *Climate) AddAlias(alias clasp.Alias, flags ...AliasFlag) {
 
-	cl.Aliases = append(cl.Aliases, alias)
+	cl.Aliases = append(cl.Aliases, &alias)
 }
 
-// Adds a flag to the Climate instance
+// Adds a (copy of the) flag to the Climate instance
 func (cl *Climate) AddFlag(flag clasp.Alias, flags ...AliasFlag) {
 
-	cl.Aliases = append(cl.Aliases, flag)
+	cl.Aliases = append(cl.Aliases, &flag)
 }
 
-// Adds an option to the Climate instance
+// Adds a (copy of the) flag to the Climate instance
+func (cl *Climate) AddFlagFunc(flag clasp.Alias, flagFn FlagFunc, flags ...AliasFlag) {
+
+	newFlag := flag.SetExtra(_libCLImate_FlagFunc, flagFn)
+
+	cl.Aliases = append(cl.Aliases, &newFlag)
+}
+
+// Adds a (copy of the) option to the Climate instance
 func (cl *Climate) AddOption(option clasp.Alias, flags ...AliasFlag) {
 
-	cl.Aliases = append(cl.Aliases, option)
+	cl.Aliases = append(cl.Aliases, &option)
+}
+
+// Adds a (copy of the) option to the Climate instance
+func (cl *Climate) AddOptionFunc(option clasp.Alias, optionFn OptionFunc, flags ...AliasFlag) {
+
+	newOption := option.SetExtra(_libCLImate_OptionFunc, optionFn)
+
+	cl.Aliases = append(cl.Aliases, &newOption)
 }
 
 // Parses a command line, obtaining a Result instance representing the
@@ -147,14 +212,14 @@ func (cl Climate) Parse(argv []string, args ...interface{}) (result Result, err 
 
 	parse_params := clasp.ParseParams {
 
-		Aliases: cl.Aliases,
+		Aliases: pointer_aliases_to_value_aliases(cl.Aliases),
 	}
 
 	arguments := clasp.Parse(argv, parse_params)
 
 	if arguments.FlagIsSpecified(clasp.HelpFlag()) {
 
-		clasp.ShowUsage(cl.Aliases, clasp.UsageParams{
+		clasp.ShowUsage(parse_params.Aliases, clasp.UsageParams{
 
 			Version: cl.Version,
 			InfoLines: cl.InfoLines,
@@ -163,10 +228,50 @@ func (cl Climate) Parse(argv []string, args ...interface{}) (result Result, err 
 
 	if arguments.FlagIsSpecified(clasp.VersionFlag()) {
 
-		clasp.ShowVersion(cl.Aliases, clasp.UsageParams{ Version: cl.Version })
+		clasp.ShowVersion(parse_params.Aliases, clasp.UsageParams{ Version: cl.Version })
 	}
 
-	// Check for any unrecognised flags or options
+	for i := 0; i != len(arguments.Arguments); i++ {
+
+		var argument *clasp.Argument = arguments.Arguments[i]
+		var alias *clasp.Alias = argument.ArgumentAlias
+
+		if alias != nil {
+
+			if 0 != len(alias.Extras) {
+
+				if ff, ff_ok := alias.Extras[_libCLImate_FlagFunc]; ff_ok {
+
+					switch fn := ff.(type) {
+
+					case FlagFunc:
+
+						fn();
+
+						argument.Use()
+					default:
+
+						// Issue warning
+					}
+				}
+
+				if of, of_ok := alias.Extras[_libCLImate_OptionFunc]; of_ok {
+
+					switch fn := of.(type) {
+
+					case OptionFunc:
+
+						fn(argument, alias);
+
+						argument.Use()
+					default:
+
+						// Issue warning
+					}
+				}
+			}
+		}
+	}
 
 	result = Result{
 
@@ -186,6 +291,8 @@ func (cl Climate) Parse(argv []string, args ...interface{}) (result Result, err 
 // Verifies that all given arguments received are recognised according to
 // the specified flags and options
 func (result Result) Verify(args ...interface{}) {
+
+	// Check for any unrecognised flags or options
 
 	if unused := result.arguments.GetUnusedFlagsAndOptions(); 0 != len(unused) {
 
