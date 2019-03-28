@@ -8,7 +8,7 @@ mini-framework, which encapsulates the common aspects of Command-Line
 Interface boilerplate. The first
 [libCLImate was a C/C++ library](https://github.com/synesissoftware/libCLImate/).
 There have been several implementations in other languages. **libCLImate.Go** is the
-Go version.
+**Go** version.
 
 ## Table of Contents
 
@@ -24,11 +24,11 @@ As described in the [**CLASP**](https://github.com/synesissoftware/CLASP) projec
 
 * **flags** are arguments that begin with 1+ hyphens and have a name, and whose presence/absence alter program behaviour, e.g. ``-f``, ``--verbose``;
 * **options** are arguments that begin with 1+ hyphens and have a name *and* a value, e.g. ``--verbosity=terse``, ``-v t``;
-* **values** are arguments that do not begin with hyphens (and are not the value of an **options**), e.g. ``~/my-files/``.
+* **values** are arguments that do not begin with hyphens (and are not the value of an **option**), e.g. ``~/my-files/``.
 
 **libCLImate** builds upon this discrimination of arguments to provide higher-level facilities and more succinct specification. All variants (except for the [**C/C++** version](https://github.com/synesissoftware/libCLImate/)) provide this in the form of a ``Climate`` class type, which is specified according to a lightweight DSL. The constructed ``Climate`` instance is then used to parse the command-line arguments, and provides a number of facilities, including:
 
-* parsing into **flags**, **options**, **values**, including recognition of special flag ``--`` as marking end of **flags**/**options**;
+* parsing into **flags**, **options**, **values**, including recognition of special flag ``--`` as marking end of **flags**/**options** (which is done via the underlying **CLASP** library);
 * automatic handling of ``--help`` flag, printing out a full description of the program features and all **flags**/**options** in details, and then terminating with exit code 0;
 * automatic handling of ``--version`` flag, printing out the program name and version, and then terminating with exit code 0;
 * detection and reporting of unrecognised **flags**/**options**, and then terminating with exit code 1;
