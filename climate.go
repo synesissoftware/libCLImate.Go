@@ -4,7 +4,7 @@
  * Purpose:     Main source file for libCLImate.Go
  *
  * Created:     22nd March 2019
- * Updated:     23rd March 2019
+ * Updated:     28th March 2019
  *
  * Home:        http://synesis.com.au/software
  *
@@ -47,6 +47,7 @@ import (
 
 	"fmt"
 	"os"
+	"path"
 )
 
 // Type of flags passed to the libclimate.Init() method
@@ -67,6 +68,7 @@ type Climate struct {
 	ParseFlags	clasp.ParseFlag
 	Version		interface{}
 	InfoLines	[]string
+	ProgramName	string
 
 	initFlags_	InitFlag
 }
@@ -149,8 +151,9 @@ func Init(initFn InitFunc, args ...interface{}) (climate *Climate, err error) {
 
 	climate	=	&Climate{
 
-		Aliases: []*clasp.Alias { },
-		initFlags_: initFlags,
+		Aliases:		[]*clasp.Alias { },
+		initFlags_:		initFlags,
+		ProgramName: 	path.Base(os.Args[0]),
 	}
 
 	if 0 == (initFlags & InitFlag_NoHelpFlag) {
@@ -318,6 +321,22 @@ func (cl Climate) ParseAndVerify(argv []string, args ...interface{}) (result Res
 
 		return
 	}
+}
+
+// Emits the given message and, optionally, err to the standard error
+// stream, prefixed with the program name, and then terminates the process
+// with a non-0 exit code.
+func (cl Climate) Abort(message string, err error) {
+
+	if err != nil {
+
+		fmt.Fprintf(os.Stderr, "%s: %s: %v\n", cl.ProgramName, message, err)
+	} else {
+
+		fmt.Fprintf(os.Stderr, "%s: %s\n", cl.ProgramName, message)
+	}
+
+	os.Exit(1)
 }
 
 // Determines if the given flag is specified
