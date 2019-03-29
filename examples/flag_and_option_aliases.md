@@ -105,7 +105,7 @@ USAGE: flag_and_option_aliases [ ... flags and options ... ]
 flags/options:
 
 	--help
-		Shows this helps and exits
+		Shows this help and exits
 
 	--version
 		Shows version information and exits

@@ -108,7 +108,7 @@ USAGE: parse_and_verify [ ... flags and options ... ]
 flags/options:
 
 	--help
-		Shows this helps and exits
+		Shows this help and exits
 
 	--version
 		Shows version information and exits

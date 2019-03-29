@@ -11,14 +11,6 @@ import (
 	"testing"
 )
 
-type stub_exiter struct {
-}
-
-func (se stub_exiter) Exit(exitCode int) {
-
-	// Do nothing
-}
-
 func Test_ShowVersion_1(t *testing.T) {
 
 	stm	:=	new(bytes.Buffer)

@@ -66,6 +66,14 @@ type exiter interface {
 	Exit(exitCode int)
 }
 
+type default_exiter struct {
+}
+
+func (de *default_exiter) Exit(exitCode int) {
+
+	os.Exit(exitCode)
+}
+
 // Structure representing a CLI parsing context, obtained from
 // libclimate.Init()
 type Climate struct {
@@ -209,34 +217,64 @@ func pointer_aliases_to_value_aliases(input []*clasp.Alias) (result []clasp.Alia
 // may not be nil) and arguments
 func Init(initFn InitFunc, options ...interface{}) (climate *Climate, err error) {
 
-	initFlags, err := parse_InitFlags_from_options_(options...)
+	var initFlags	InitFlag
+	var stream		io.Writer
+	var exiter		exiter
+
+	if err == nil {
+
+		initFlags, err = parse_InitFlags_from_options_(options...)
+	}
+
+	if err == nil {
+
+		stream, err = parse_Stream_from_options_(options...)
+	}
+
+	if err == nil {
+
+		exiter, err = parse_Exiter_from_options_(options...)
+	}
+	if err == nil && exiter == nil {
+
+		exiter = new(default_exiter)
+	}
+
+	if err == nil {
+
+		climate	=	&Climate{
+
+			Aliases:		[]*clasp.Alias { },
+			//ParseFlags:
+			//Version:
+			//VersionPrefix:
+			//InfoLines:
+			ProgramName: 	path.Base(os.Args[0]),
+
+			initFlags_:		initFlags,
+			stream_:		stream,
+			exiter_:		exiter,
+		}
+
+		if 0 == (initFlags & InitFlag_NoHelpFlag) {
+
+			climate.AddFlag(clasp.HelpFlag())
+		}
+
+		if 0 == (initFlags & InitFlag_NoVersionFlag) {
+
+			climate.AddFlag(clasp.VersionFlag())
+		}
+
+		err = initFn(climate)
+	}
 
 	if err != nil {
 
-		return
-	}
+		if 0 != (InitFlag_PanicOnFailure & initFlags) {
 
-	climate	=	&Climate{
-
-		Aliases:		[]*clasp.Alias { },
-		initFlags_:		initFlags,
-		ProgramName: 	path.Base(os.Args[0]),
-	}
-
-	if 0 == (initFlags & InitFlag_NoHelpFlag) {
-
-		climate.AddFlag(clasp.HelpFlag())
-	}
-
-	if 0 == (initFlags & InitFlag_NoVersionFlag) {
-
-		climate.AddFlag(clasp.VersionFlag())
-	}
-
-	err = initFn(climate)
-
-	if err != nil {
-
+			panic(err)
+		}
 	}
 
 	return
@@ -280,112 +318,130 @@ func (cl *Climate) AddOptionFunc(option clasp.Alias, optionFn OptionFunc, flags 
 // arguments received by the process
 func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, err error) {
 
-	parseFlags, err := parse_ParseFlags_from_options_(options...)
+	var parseFlags	ParseFlag
+	var stream		io.Writer
+	var exiter		exiter
+	var arguments	*clasp.Arguments
 
-	if err != nil {
+	if err == nil {
 
-		return
+		parseFlags, err = parse_ParseFlags_from_options_(options...)
 	}
 
-	stream, err := parse_Stream_from_options_(options...)
-	if err != nil {
+	if err == nil {
 
-		return
+		stream, err = parse_Stream_from_options_(options...)
 	}
 
-	exiter, err := parse_Exiter_from_options_(options...)
-	if err != nil {
+	if err == nil {
 
-		return
+		exiter, err = parse_Exiter_from_options_(options...)
+	}
+	if err == nil && exiter == nil {
+
+		exiter = cl.exiter_
 	}
 
-	parse_params := clasp.ParseParams {
+	if err == nil {
 
-		Aliases: pointer_aliases_to_value_aliases(cl.Aliases),
-	}
+		parse_params := clasp.ParseParams {
 
-	arguments := clasp.Parse(argv, parse_params)
+			Aliases: pointer_aliases_to_value_aliases(cl.Aliases),
+		}
 
-	if arguments.FlagIsSpecified(clasp.HelpFlag()) {
+		arguments = clasp.Parse(argv, parse_params)
 
-		clasp.ShowUsage(parse_params.Aliases, clasp.UsageParams{
+		if arguments.FlagIsSpecified(clasp.HelpFlag()) {
 
-			Version: cl.Version,
-			VersionPrefix: cl.VersionPrefix,
-			InfoLines: cl.InfoLines,
-			Stream: stream,
-			Exiter: exiter,
-			ProgramName: arguments.ProgramName,
-		})
-	}
+			clasp.ShowUsage(parse_params.Aliases, clasp.UsageParams{
 
-	if arguments.FlagIsSpecified(clasp.VersionFlag()) {
+				Version: cl.Version,
+				VersionPrefix: cl.VersionPrefix,
+				InfoLines: cl.InfoLines,
+				Stream: stream,
+				Exiter: exiter,
+				ProgramName: arguments.ProgramName,
+			})
+		}
 
-		clasp.ShowVersion(parse_params.Aliases, clasp.UsageParams{
+		if arguments.FlagIsSpecified(clasp.VersionFlag()) {
 
-			Version: cl.Version,
-			VersionPrefix: cl.VersionPrefix,
-			Stream: stream,
-			Exiter: exiter,
-			ProgramName: arguments.ProgramName,
-		})
-	}
+			clasp.ShowVersion(parse_params.Aliases, clasp.UsageParams{
 
-	for i := 0; i != len(arguments.Arguments); i++ {
+				Version: cl.Version,
+				VersionPrefix: cl.VersionPrefix,
+				Stream: stream,
+				Exiter: exiter,
+				ProgramName: arguments.ProgramName,
+			})
+		}
 
-		var argument *clasp.Argument = arguments.Arguments[i]
-		var alias *clasp.Alias = argument.ArgumentAlias
+		for i := 0; i != len(arguments.Arguments); i++ {
 
-		if alias != nil {
+			var argument *clasp.Argument = arguments.Arguments[i]
+			var alias *clasp.Alias = argument.ArgumentAlias
 
-			if 0 != len(alias.Extras) {
+			if alias != nil {
 
-				if ff, ff_ok := alias.Extras[_libCLImate_FlagFunc]; ff_ok {
+				if 0 != len(alias.Extras) {
 
-					switch fn := ff.(type) {
+					if ff, ff_ok := alias.Extras[_libCLImate_FlagFunc]; ff_ok {
 
-					case FlagFunc:
+						switch fn := ff.(type) {
 
-						fn();
+						case FlagFunc:
 
-						argument.Use()
-					default:
+							fn();
 
-						// Issue warning
+							argument.Use()
+						default:
+
+							// Issue warning
+						}
 					}
-				}
 
-				if of, of_ok := alias.Extras[_libCLImate_OptionFunc]; of_ok {
+					if of, of_ok := alias.Extras[_libCLImate_OptionFunc]; of_ok {
 
-					switch fn := of.(type) {
+						switch fn := of.(type) {
 
-					case OptionFunc:
+						case OptionFunc:
 
-						fn(argument, alias);
+							fn(argument, alias);
 
-						argument.Use()
-					default:
+							argument.Use()
+						default:
 
-						// Issue warning
+							// Issue warning
+						}
 					}
 				}
 			}
 		}
 	}
 
-	result = Result{
 
-		Flags: arguments.Flags,
-		Options: arguments.Options,
-		Values: arguments.Values,
+	if err != nil {
 
-		ProgramName: arguments.ProgramName,
-		Argv: argv,
+		if 0 != (ParseFlag_PanicOnFailure & parseFlags) {
 
-		arguments_: arguments,
-		parseFlags_: parseFlags,
-		stream_: stream,
-		exiter_: exiter,
+			panic(err)
+		}
+	} else {
+
+		result = Result{
+
+			Flags: arguments.Flags,
+			Options: arguments.Options,
+			Values: arguments.Values,
+
+			ProgramName: arguments.ProgramName,
+			Argv: argv,
+
+			arguments_: arguments,
+			parseFlags_: parseFlags,
+			stream_: stream,
+			exiter_: exiter,
+		}
 	}
 
 	return
@@ -395,13 +451,31 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 // the specified flags and options
 func (result Result) Verify(options ...interface{}) {
 
-	// Check for any unrecognised flags or options
+	var err			error
+	var parseFlags	ParseFlag
 
-	if unused := result.arguments_.GetUnusedFlagsAndOptions(); 0 != len(unused) {
+	stream, _ := parse_Stream_from_options_(options...)
+	if stream == nil {
 
-		fmt.Fprintf(os.Stderr, "%s: unrecognised flag/option: %s\n", result.arguments_.ProgramName, unused[0].Str())
+		stream = os.Stderr
+	}
 
-		os.Exit(1)
+	if err == nil {
+
+		parseFlags, err = parse_ParseFlags_from_options_(options...)
+	}
+	parseFlags |= result.parseFlags_
+
+	if 0 == (ParseFlag_DontCheckUnused & parseFlags) {
+
+		// Check for any unrecognised flags or options
+
+		if unused := result.arguments_.GetUnusedFlagsAndOptions(); 0 != len(unused) {
+
+			fmt.Fprintf(stream, "%s: unrecognised flag/option: %s\n", result.arguments_.ProgramName, unused[0].Str())
+
+			result.exiter_.Exit(1)
+		}
 	}
 }
 
@@ -426,17 +500,31 @@ func (cl Climate) ParseAndVerify(argv []string, options ...interface{}) (result 
 // Emits the given message and, optionally, err to the standard error
 // stream, prefixed with the program name, and then terminates the process
 // with a non-0 exit code.
-func (cl Climate) Abort(message string, err error) {
+func (cl Climate) Abort(message string, err error, options ...interface{}) {
+
+	var exiter exiter
+
+	stream, _ := parse_Stream_from_options_(options...)
+	if stream == nil {
+
+		stream = os.Stderr
+	}
+
+	exiter, _ = parse_Exiter_from_options_(options...)
+	if exiter == nil {
+
+		exiter = cl.exiter_
+	}
 
 	if err != nil {
 
-		fmt.Fprintf(os.Stderr, "%s: %s: %v\n", cl.ProgramName, message, err)
+		fmt.Fprintf(stream, "%s: %s: %v\n", cl.ProgramName, message, err)
 	} else {
 
-		fmt.Fprintf(os.Stderr, "%s: %s\n", cl.ProgramName, message)
+		fmt.Fprintf(stream, "%s: %s\n", cl.ProgramName, message)
 	}
 
-	os.Exit(1)
+	exiter.Exit(1)
 }
 
 // Determines if the given flag is specified
