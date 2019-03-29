@@ -1,5 +1,10 @@
 # **libCLImate.Go** Changes
 
+## 0.4.0 - 29th March 2019
+
+* + added ``Climate.VersionPrefix`` field
+* ~ substantial internal changes to ensure that mocking works for unit-tests
+
 ## 0.3.0 - 28th March 2019
 
 * + added ``Climate.ProgramName`` field

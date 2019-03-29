@@ -28,10 +28,6 @@ func main() {
 	}
 
 	_, _ = climate.ParseAndVerify(os.Args, libclimate.ParseFlag_PanicOnFailure)
-	if err != nil {
-
-		panic(err)
-	}
 
 
 	// Finish normal processing

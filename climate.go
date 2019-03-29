@@ -46,6 +46,7 @@ import (
 	clasp "github.com/synesissoftware/CLASP.Go"
 
 	"fmt"
+	"io"
 	"os"
 	"path"
 )
@@ -60,17 +61,25 @@ type ParseFlag int
 // and libclimate.AddOption() methods
 type AliasFlag int
 
+type exiter interface {
+
+	Exit(exitCode int)
+}
+
 // Structure representing a CLI parsing context, obtained from
 // libclimate.Init()
 type Climate struct {
 
-	Aliases		[]*clasp.Alias
-	ParseFlags	clasp.ParseFlag
-	Version		interface{}
-	InfoLines	[]string
-	ProgramName	string
+	Aliases			[]*clasp.Alias
+	ParseFlags		clasp.ParseFlag
+	Version			interface{}
+	VersionPrefix	string
+	InfoLines		[]string
+	ProgramName		string
 
-	initFlags_	InitFlag
+	initFlags_		InitFlag
+	stream_			io.Writer
+	exiter_			exiter
 }
 
 // Structure representing CLI results, obtained from Climate.Parse()
@@ -82,7 +91,10 @@ type Result struct {
 	ProgramName	string
 	Argv		[]string
 
-	arguments	*clasp.Arguments
+	arguments_	*clasp.Arguments
+	parseFlags_	ParseFlag
+	stream_		io.Writer
+	exiter_		exiter
 }
 
 // Callback function for specification of Climate via DSL
@@ -117,7 +129,62 @@ const (
  * helper functions
  */
 
-func parseInitFlags(options ...interface{}) (result InitFlag, err error) {
+func parse_Exiter_from_options_(options ...interface{}) (result exiter, err error) {
+
+	for _, option := range(options) {
+
+		switch v := option.(type) {
+
+		case exiter:
+
+			return v, nil
+		}
+	}
+
+	return
+}
+
+func parse_Stream_from_options_(options ...interface{}) (result io.Writer, err error) {
+
+	for _, option := range(options) {
+
+		switch v := option.(type) {
+
+		case io.Writer:
+
+			return v, nil
+		}
+	}
+
+	return
+}
+
+func parse_InitFlags_from_options_(options ...interface{}) (result InitFlag, err error) {
+
+	for _, option := range(options) {
+
+		switch v := option.(type) {
+
+		case InitFlag:
+
+			result |= v
+		}
+	}
+
+	return
+}
+
+func parse_ParseFlags_from_options_(options ...interface{}) (result ParseFlag, err error) {
+
+	for _, option := range(options) {
+
+		switch v := option.(type) {
+
+		case ParseFlag:
+
+			result |= v
+		}
+	}
 
 	return
 }
@@ -142,7 +209,7 @@ func pointer_aliases_to_value_aliases(input []*clasp.Alias) (result []clasp.Alia
 // may not be nil) and arguments
 func Init(initFn InitFunc, options ...interface{}) (climate *Climate, err error) {
 
-	initFlags, err := parseInitFlags(options...)
+	initFlags, err := parse_InitFlags_from_options_(options...)
 
 	if err != nil {
 
@@ -213,6 +280,25 @@ func (cl *Climate) AddOptionFunc(option clasp.Alias, optionFn OptionFunc, flags 
 // arguments received by the process
 func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, err error) {
 
+	parseFlags, err := parse_ParseFlags_from_options_(options...)
+
+	if err != nil {
+
+		return
+	}
+
+	stream, err := parse_Stream_from_options_(options...)
+	if err != nil {
+
+		return
+	}
+
+	exiter, err := parse_Exiter_from_options_(options...)
+	if err != nil {
+
+		return
+	}
+
 	parse_params := clasp.ParseParams {
 
 		Aliases: pointer_aliases_to_value_aliases(cl.Aliases),
@@ -225,13 +311,24 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 		clasp.ShowUsage(parse_params.Aliases, clasp.UsageParams{
 
 			Version: cl.Version,
+			VersionPrefix: cl.VersionPrefix,
 			InfoLines: cl.InfoLines,
+			Stream: stream,
+			Exiter: exiter,
+			ProgramName: arguments.ProgramName,
 		})
 	}
 
 	if arguments.FlagIsSpecified(clasp.VersionFlag()) {
 
-		clasp.ShowVersion(parse_params.Aliases, clasp.UsageParams{ Version: cl.Version })
+		clasp.ShowVersion(parse_params.Aliases, clasp.UsageParams{
+
+			Version: cl.Version,
+			VersionPrefix: cl.VersionPrefix,
+			Stream: stream,
+			Exiter: exiter,
+			ProgramName: arguments.ProgramName,
+		})
 	}
 
 	for i := 0; i != len(arguments.Arguments); i++ {
@@ -285,7 +382,10 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 		ProgramName: arguments.ProgramName,
 		Argv: argv,
 
-		arguments: arguments,
+		arguments_: arguments,
+		parseFlags_: parseFlags,
+		stream_: stream,
+		exiter_: exiter,
 	}
 
 	return
@@ -297,9 +397,9 @@ func (result Result) Verify(options ...interface{}) {
 
 	// Check for any unrecognised flags or options
 
-	if unused := result.arguments.GetUnusedFlagsAndOptions(); 0 != len(unused) {
+	if unused := result.arguments_.GetUnusedFlagsAndOptions(); 0 != len(unused) {
 
-		fmt.Fprintf(os.Stderr, "%s: unrecognised flag/option: %s\n", result.arguments.ProgramName, unused[0].Str())
+		fmt.Fprintf(os.Stderr, "%s: unrecognised flag/option: %s\n", result.arguments_.ProgramName, unused[0].Str())
 
 		os.Exit(1)
 	}
@@ -342,21 +442,21 @@ func (cl Climate) Abort(message string, err error) {
 // Determines if the given flag is specified
 func (result Result) FlagIsSpecified(id interface{}) bool {
 
-	return result.arguments.FlagIsSpecified(id)
+	return result.arguments_.FlagIsSpecified(id)
 }
 
 // Looks for a flag with the given id - name, or the alias instance - and
 // returns it and the value true if found; if not, returns nil and false
 func (result Result) LookupFlag(id interface{}) (*clasp.Argument, bool) {
 
-	return result.arguments.LookupFlag(id)
+	return result.arguments_.LookupFlag(id)
 }
 
 // Looks for an option with the given id - name, or the alias instance - and
 // returns it and the value true if found; if not, returns nil and false
 func (result Result) LookupOption(id interface{}) (*clasp.Argument, bool) {
 
-	return result.arguments.LookupOption(id)
+	return result.arguments_.LookupOption(id)
 }
 
 /* ///////////////////////////// end of file //////////////////////////// */
