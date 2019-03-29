@@ -4,7 +4,7 @@
  * Purpose:     Main source file for libCLImate.Go
  *
  * Created:     22nd March 2019
- * Updated:     28th March 2019
+ * Updated:     29th March 2019
  *
  * Home:        http://synesis.com.au/software
  *
@@ -117,7 +117,7 @@ const (
  * helper functions
  */
 
-func parseInitFlags(args ...interface{}) (result InitFlag, err error) {
+func parseInitFlags(options ...interface{}) (result InitFlag, err error) {
 
 	return
 }
@@ -140,9 +140,9 @@ func pointer_aliases_to_value_aliases(input []*clasp.Alias) (result []clasp.Alia
 
 // Initialises a Climate instance, according to the given function (which
 // may not be nil) and arguments
-func Init(initFn InitFunc, args ...interface{}) (climate *Climate, err error) {
+func Init(initFn InitFunc, options ...interface{}) (climate *Climate, err error) {
 
-	initFlags, err := parseInitFlags(args...)
+	initFlags, err := parseInitFlags(options...)
 
 	if err != nil {
 
@@ -211,7 +211,7 @@ func (cl *Climate) AddOptionFunc(option clasp.Alias, optionFn OptionFunc, flags 
 
 // Parses a command line, obtaining a Result instance representing the
 // arguments received by the process
-func (cl Climate) Parse(argv []string, args ...interface{}) (result Result, err error) {
+func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, err error) {
 
 	parse_params := clasp.ParseParams {
 
@@ -293,7 +293,7 @@ func (cl Climate) Parse(argv []string, args ...interface{}) (result Result, err 
 
 // Verifies that all given arguments received are recognised according to
 // the specified flags and options
-func (result Result) Verify(args ...interface{}) {
+func (result Result) Verify(options ...interface{}) {
 
 	// Check for any unrecognised flags or options
 
@@ -309,15 +309,15 @@ func (result Result) Verify(args ...interface{}) {
 //
 // Panics, rather than returns, if the ParseFlag_PanicOnFailure flag is
 // specified
-func (cl Climate) ParseAndVerify(argv []string, args ...interface{}) (result Result, err error) {
+func (cl Climate) ParseAndVerify(argv []string, options ...interface{}) (result Result, err error) {
 
-	result, err = cl.Parse(argv, args...)
+	result, err = cl.Parse(argv, options...)
 	if err != nil {
 
 		return
 	} else {
 
-		result.Verify(args...)
+		result.Verify(options...)
 
 		return
 	}
