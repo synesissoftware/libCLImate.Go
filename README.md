@@ -102,7 +102,7 @@ flags/options:
 		Shows version information and exits
 ```
 
-* ``-version``
+* ``--version``
 ```
 README_Components 0.0.1
 ```
