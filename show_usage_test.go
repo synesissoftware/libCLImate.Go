@@ -138,7 +138,7 @@ func Test_ShowUsage_3(t *testing.T) {
 		cl.AddFlag(clasp.Option("--verbosity").
 					SetHelp("Specifies the verbosity").
 					SetValues("low", "medium", "high"))
-		cl.AddAlias(clasp.Flag("--verbosity=high").SetAlias("-v"))
+		cl.AddAlias("--verbosity=high", "-v")
 
 		return nil
 	});

@@ -1,5 +1,9 @@
 # **libCLImate.Go** Changes
 
+## 0.5.0 - 8th April 2019
+
+* ~ ``AddAlias()`` method now takes two string parameters: resolved_name, alias_name
+
 ## 0.4.2 - 30th March 2019
 
 * + now supports ``InitFlag_PanicOnFailure`` flag
@@ -37,3 +41,4 @@ NOTE: requires latest version (0.14.2) of **CLASP.Go** (https://github.com/synes
 ## 0.1.0 - 23rd March 2019
 
 FIRST PUBLIC RELEASE
+

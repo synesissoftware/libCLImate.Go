@@ -26,14 +26,13 @@ func main() {
 
 	flag_Debug			:=	clasp.Alias{ clasp.Flag, "--debug", []string{ "-d" }, "runs in Debug mode", nil, 0, nil }
 	option_Verbosity	:=	clasp.Alias{ clasp.Option, "--verbosity", []string{ "-v" }, "specifies the verbosity", []string{ "terse", "quiet", "silent", "chatty" }, 0, nil }
-	flag_Chatty			:=	clasp.Alias{ clasp.Flag, "--verbosity=chatty", []string{ "-c" }, "", nil, 0, nil }
 
 
 	climate, err := libclimate.Init(func (cl *libclimate.Climate) (err error) {
 
 		cl.AddFlag(flag_Debug)
 		cl.AddOption(option_Verbosity)
-		cl.AddAlias(flag_Chatty)
+		cl.AddAlias("--verbosity=chatty", "-c")
 
 		cl.Version = "0.0.1"
 

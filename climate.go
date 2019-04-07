@@ -4,7 +4,7 @@
  * Purpose:     Main source file for libCLImate.Go
  *
  * Created:     22nd March 2019
- * Updated:     29th March 2019
+ * Updated:     8th April 2019
  *
  * Home:        http://synesis.com.au/software
  *
@@ -57,7 +57,7 @@ type InitFlag int
 // Type of flags passed to the libclimate.Parse() method
 type ParseFlag int
 
-// Type of flags passed to the libclimate.AddAlias(), libclimate.AddFlag(),
+// Type of flags passed to the libclimate.AddFlag(),
 // and libclimate.AddOption() methods
 type AliasFlag int
 
@@ -280,10 +280,16 @@ func Init(initFn InitFunc, options ...interface{}) (climate *Climate, err error)
 	return
 }
 
-// Adds a (copy of the) alias to the Climate instance
-func (cl *Climate) AddAlias(alias clasp.Alias, flags ...AliasFlag) {
+// Adds an alias to the Climate instance
+//
+// The resolved_name param can be the name of a flag or option, or an
+// option-with-value. The alias param is the alias (which must not
+// contain an equals sign.
+func (cl *Climate) AddAlias(resolved_name, alias string) {
 
-	cl.Aliases = append(cl.Aliases, &alias)
+	f := clasp.Flag(resolved_name).SetAlias(alias)
+
+	cl.Aliases = append(cl.Aliases, &f)
 }
 
 // Adds a (copy of the) flag to the Climate instance

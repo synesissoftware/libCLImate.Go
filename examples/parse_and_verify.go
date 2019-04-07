@@ -17,7 +17,6 @@ func main() {
 
 	flag_Debug			:=	clasp.Alias{ clasp.FlagType, "--debug", []string{ "-d" }, "runs in Debug mode", nil, 0, nil }
 	option_Verbosity	:=	clasp.Alias{ clasp.OptionType, "--verbosity", []string{ "-v" }, "specifies the verbosity", []string{ "terse", "quiet", "silent", "chatty" }, 0, nil }
-	flag_Chatty			:=	clasp.Alias{ clasp.FlagType, "--verbosity=chatty", []string{ "-c" }, "", nil, 0, nil }
 
 	is_debug			:=	false
 	verbosity			:=	""
@@ -32,7 +31,7 @@ func main() {
 
 			verbosity = o.Value
 		})
-		cl.AddAlias(flag_Chatty)
+		cl.AddAlias("--verbosity=chatty", "-c")
 
 		cl.Version = "0.0.1"
 
