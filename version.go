@@ -4,7 +4,7 @@
  * Purpose:     Version file for libCLImate.Go
  *
  * Created:     22nd March 2019
- * Updated:     8th April 2019
+ * Updated:     9th April 2019
  *
  * Home:        http://synesis.com.au/software
  *
@@ -45,7 +45,7 @@ const (
 
 	VersionMajor int16		=	0
 	VersionMinor int16		=	5
-	VersionPatch int16		=	0
+	VersionPatch int16		=	1
 	Version int64			=	(int64(VersionMajor) << 48) + (int64(VersionMinor) << 32) + (int64(VersionPatch) << 16)
 
 	VersionRevision int16	=	VersionPatch

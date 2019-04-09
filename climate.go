@@ -4,7 +4,7 @@
  * Purpose:     Main source file for libCLImate.Go
  *
  * Created:     22nd March 2019
- * Updated:     8th April 2019
+ * Updated:     9th April 2019
  *
  * Home:        http://synesis.com.au/software
  *
@@ -83,6 +83,7 @@ type Climate struct {
 	Version			interface{}
 	VersionPrefix	string
 	InfoLines		[]string
+	ValuesString	string
 	ProgramName		string
 
 	initFlags_		InitFlag
@@ -364,6 +365,7 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 				Version: cl.Version,
 				VersionPrefix: cl.VersionPrefix,
 				InfoLines: cl.InfoLines,
+				ValuesString: cl.ValuesString,
 				Stream: stream,
 				Exiter: exiter,
 				ProgramName: arguments.ProgramName,

@@ -134,6 +134,7 @@ func Test_ShowUsage_3(t *testing.T) {
 			"ShowUsage tests",
 			":version:",
 		}
+		cl.ValuesString = "<path-1> <path-2>"
 
 		cl.AddFlag(clasp.Option("--verbosity").
 					SetHelp("Specifies the verbosity").
@@ -154,7 +155,7 @@ func Test_ShowUsage_3(t *testing.T) {
 
 		"ShowUsage tests",
 		"myapp v0.1.2",
-		"USAGE: myapp [ ... flags and options ... ]",
+		"USAGE: myapp [ ... flags and options ... ] <path-1> <path-2>",
 		"flags/options:",
 		"\t--help",
 		"\t\tShows this help and exits",
