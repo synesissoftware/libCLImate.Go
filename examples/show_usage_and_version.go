@@ -12,7 +12,7 @@ import (
 
 func main() {
 
-	// Specify aliases, parse, and checking standard flags
+	// Specify specifications, parse, and checking standard flags
 
 	climate, err := libclimate.Init(func (cl *libclimate.Climate) (err error) {
 

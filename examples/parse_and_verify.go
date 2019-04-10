@@ -13,10 +13,10 @@ import (
 
 func main() {
 
-	// Specify aliases, parse, and checking standard flags
+	// Specify specifications, parse, and checking standard flags
 
-	flag_Debug			:=	clasp.Alias{ clasp.FlagType, "--debug", []string{ "-d" }, "runs in Debug mode", nil, 0, nil }
-	option_Verbosity	:=	clasp.Alias{ clasp.OptionType, "--verbosity", []string{ "-v" }, "specifies the verbosity", []string{ "terse", "quiet", "silent", "chatty" }, 0, nil }
+	flag_Debug			:=	clasp.Specification{ clasp.FlagType, "--debug", []string{ "-d" }, "runs in Debug mode", nil, 0, nil }
+	option_Verbosity	:=	clasp.Specification{ clasp.OptionType, "--verbosity", []string{ "-v" }, "specifies the verbosity", []string{ "terse", "quiet", "silent", "chatty" }, 0, nil }
 
 	is_debug			:=	false
 	verbosity			:=	""
@@ -27,7 +27,7 @@ func main() {
 
 			is_debug = true
 		})
-		cl.AddOptionFunc(option_Verbosity, func (o *clasp.Argument, a *clasp.Alias) {
+		cl.AddOptionFunc(option_Verbosity, func (o *clasp.Argument, a *clasp.Specification) {
 
 			verbosity = o.Value
 		})

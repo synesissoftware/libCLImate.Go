@@ -1,5 +1,9 @@
 # **libCLImate.Go** Changes
 
+## 0.6.0 - 10th April 2019
+
+* ~ updated in light of breaking changes in **CLASP.Go** 0.15
+
 ## 0.5.0 - 8th April 2019
 
 * ~ ``AddAlias()`` method now takes two string parameters: resolved_name, alias_name

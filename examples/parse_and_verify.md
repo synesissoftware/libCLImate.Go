@@ -2,7 +2,7 @@
 
 ## Summary
 
-Exactly equivalent example to **flag_and_option_aliases**, but using ``AddFlagFunc()`` and ``AddOptionFunc()`` methods that specify callbacks executed when the flag/option is encountered in the parsed command-line.
+Exactly equivalent example to **flag_and_option_specifications**, but using ``AddFlagFunc()`` and ``AddOptionFunc()`` methods that specify callbacks executed when the flag/option is encountered in the parsed command-line.
 
 ## Source
 
@@ -22,7 +22,7 @@ import (
 
 func main() {
 
-	// Specify aliases, parse, and checking standard flags
+	// Specify specifications, parse, and checking standard flags
 
 	flag_Debug			:=	clasp.Alias{ clasp.FlagType, "--debug", []string{ "-d" }, "runs in Debug mode", nil, 0, nil }
 	option_Verbosity	:=	clasp.Alias{ clasp.OptionType, "--verbosity", []string{ "-v" }, "specifies the verbosity", []string{ "terse", "quiet", "silent", "chatty" }, 0, nil }

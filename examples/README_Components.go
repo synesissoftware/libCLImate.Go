@@ -23,7 +23,7 @@ func main() {
 
         o_Verbosity := clasp.Option("--verbosity").SetHelp("specifies verbosity").SetAlias("-v").SetValues("terse", "quiet", "silent", "chatty")
 
-        cl.AddOptionFunc(o_Verbosity, func (o *clasp.Argument, a *clasp.Alias) {
+        cl.AddOptionFunc(o_Verbosity, func (o *clasp.Argument, a *clasp.Specification) {
 
 			fmt.Printf("verbosity specified as: %v\n", o.Value)
 		})
