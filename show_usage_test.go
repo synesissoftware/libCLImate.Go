@@ -1,8 +1,6 @@
-
 package libclimate_test
 
 import (
-
 	angols "github.com/synesissoftware/ANGoLS"
 	clasp "github.com/synesissoftware/CLASP.Go"
 	libclimate "github.com/synesissoftware/libCLImate.Go"
@@ -16,9 +14,9 @@ import (
 
 func lines_to_display_string_(lines []string) string {
 
-	stm	:=	new(bytes.Buffer)
+	stm := new(bytes.Buffer)
 
-	for i, line := range(lines) {
+	for i, line := range lines {
 
 		fmt.Fprintf(stm, "\t[% 2d]\t%s\n", i, line)
 	}
@@ -28,13 +26,13 @@ func lines_to_display_string_(lines []string) string {
 
 func Test_ShowUsage_1(t *testing.T) {
 
-	stm	:=	new(bytes.Buffer)
-	argv := []string{ "bin/myapp", "--help" }
+	stm := new(bytes.Buffer)
+	argv := []string{"bin/myapp", "--help"}
 
-	climate, err := libclimate.Init(func (cl *libclimate.Climate) (err error) {
+	climate, err := libclimate.Init(func(cl *libclimate.Climate) (err error) {
 
 		return nil
-	});
+	})
 	if err != nil {
 
 		fmt.Fprintf(os.Stderr, "failed to create CLI parser: %v\n", err)
@@ -42,8 +40,8 @@ func Test_ShowUsage_1(t *testing.T) {
 
 	_, _ = climate.ParseAndVerify(argv, stm, stub_exiter{})
 
-	actual		:=	strings.Split(stm.String(), "\n")
-	expected	:=	[]string{
+	actual := strings.Split(stm.String(), "\n")
+	expected := []string{
 
 		"USAGE: myapp [ ... flags and options ... ]",
 		"flags/options:",
@@ -53,7 +51,7 @@ func Test_ShowUsage_1(t *testing.T) {
 		"\t\tShows version information and exits",
 	}
 
-	actual, _	=	angols.SelectSliceOfString(actual, func(_ int, line string) (bool, error) {
+	actual, _ = angols.SelectSliceOfString(actual, func(_ int, line string) (bool, error) {
 
 		return 0 != len(line), nil
 	})
@@ -69,12 +67,12 @@ func Test_ShowUsage_1(t *testing.T) {
 
 func Test_ShowUsage_2(t *testing.T) {
 
-	stm	:=	new(bytes.Buffer)
-	argv := []string{ "bin/myapp", "--help" }
+	stm := new(bytes.Buffer)
+	argv := []string{"bin/myapp", "--help"}
 
-	climate, err := libclimate.Init(func (cl *libclimate.Climate) (err error) {
+	climate, err := libclimate.Init(func(cl *libclimate.Climate) (err error) {
 
-		cl.Version = []int{ 0, 1, 2 }
+		cl.Version = []int{0, 1, 2}
 		cl.VersionPrefix = "v"
 
 		cl.InfoLines = []string{
@@ -84,7 +82,7 @@ func Test_ShowUsage_2(t *testing.T) {
 		}
 
 		return nil
-	});
+	})
 	if err != nil {
 
 		fmt.Fprintf(os.Stderr, "failed to create CLI parser: %v\n", err)
@@ -92,8 +90,8 @@ func Test_ShowUsage_2(t *testing.T) {
 
 	_, _ = climate.ParseAndVerify(argv, stm, stub_exiter{})
 
-	actual		:=	strings.Split(stm.String(), "\n")
-	expected	:=	[]string{
+	actual := strings.Split(stm.String(), "\n")
+	expected := []string{
 
 		"ShowUsage tests",
 		"myapp v0.1.2",
@@ -105,7 +103,7 @@ func Test_ShowUsage_2(t *testing.T) {
 		"\t\tShows version information and exits",
 	}
 
-	actual, _	=	angols.SelectSliceOfString(actual, func(_ int, line string) (bool, error) {
+	actual, _ = angols.SelectSliceOfString(actual, func(_ int, line string) (bool, error) {
 
 		return 0 != len(line), nil
 	})
@@ -121,12 +119,12 @@ func Test_ShowUsage_2(t *testing.T) {
 
 func Test_ShowUsage_3(t *testing.T) {
 
-	stm	:=	new(bytes.Buffer)
-	argv := []string{ "bin/myapp", "--help" }
+	stm := new(bytes.Buffer)
+	argv := []string{"bin/myapp", "--help"}
 
-	climate, err := libclimate.Init(func (cl *libclimate.Climate) (err error) {
+	climate, err := libclimate.Init(func(cl *libclimate.Climate) (err error) {
 
-		cl.Version = []int{ 0, 1, 2 }
+		cl.Version = []int{0, 1, 2}
 		cl.VersionPrefix = "v"
 
 		cl.InfoLines = []string{
@@ -137,12 +135,12 @@ func Test_ShowUsage_3(t *testing.T) {
 		cl.ValuesString = "<path-1> <path-2>"
 
 		cl.AddFlag(clasp.Option("--verbosity").
-					SetHelp("Specifies the verbosity").
-					SetValues("low", "medium", "high"))
+			SetHelp("Specifies the verbosity").
+			SetValues("low", "medium", "high"))
 		cl.AddAlias("--verbosity=high", "-v")
 
 		return nil
-	});
+	})
 	if err != nil {
 
 		fmt.Fprintf(os.Stderr, "failed to create CLI parser: %v\n", err)
@@ -150,8 +148,8 @@ func Test_ShowUsage_3(t *testing.T) {
 
 	_, _ = climate.ParseAndVerify(argv, stm, stub_exiter{})
 
-	actual		:=	strings.Split(stm.String(), "\n")
-	expected	:=	[]string{
+	actual := strings.Split(stm.String(), "\n")
+	expected := []string{
 
 		"ShowUsage tests",
 		"myapp v0.1.2",
@@ -170,7 +168,7 @@ func Test_ShowUsage_3(t *testing.T) {
 		"\t\t\thigh",
 	}
 
-	actual, _	=	angols.SelectSliceOfString(actual, func(_ int, line string) (bool, error) {
+	actual, _ = angols.SelectSliceOfString(actual, func(_ int, line string) (bool, error) {
 
 		return 0 != len(line), nil
 	})
@@ -183,5 +181,3 @@ func Test_ShowUsage_3(t *testing.T) {
 		)
 	}
 }
-
-

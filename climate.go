@@ -1,48 +1,15 @@
-/* /////////////////////////////////////////////////////////////////////////
- * File:        climate.go
- *
- * Purpose:     Main source file for libCLImate.Go
- *
- * Created:     22nd March 2019
- * Updated:     9th April 2019
- *
- * Home:        http://synesis.com.au/software
- *
- * Copyright (c) 2019, Matthew Wilson
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are
- * met:
- *
- * - Redistributions of source code must retain the above copyright notice,
- *   this list of conditions and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright
- *   notice, this list of conditions and the following disclaimer in the
- *   documentation and/or other materials provided with the distribution.
- * - Neither the names of Matthew Wilson and Synesis Software nor the names
- *   of any contributors may be used to endorse or promote products derived
- *   from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * ////////////////////////////////////////////////////////////////////// */
+// Copyright 2019-2025, Matthew Wilson and Synesis Information Systems. All
+// rights reserved. Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
+/*
+ * Created: 22nd March 2019
+ * Updated: 24th February 2025
+ */
 
 package libclimate
 
 import (
-
 	clasp "github.com/synesissoftware/CLASP.Go"
 
 	"fmt"
@@ -62,7 +29,6 @@ type ParseFlag int
 type AliasFlag int
 
 type exiter interface {
-
 	Exit(exitCode int)
 }
 
@@ -77,33 +43,31 @@ func (de *default_exiter) Exit(exitCode int) {
 // Structure representing a CLI parsing context, obtained from
 // libclimate.Init()
 type Climate struct {
+	Specifications []*clasp.Specification
+	ParseFlags     clasp.ParseFlag
+	Version        interface{}
+	VersionPrefix  string
+	InfoLines      []string
+	ValuesString   string
+	ProgramName    string
 
-	Specifications	[]*clasp.Specification
-	ParseFlags		clasp.ParseFlag
-	Version			interface{}
-	VersionPrefix	string
-	InfoLines		[]string
-	ValuesString	string
-	ProgramName		string
-
-	initFlags_		InitFlag
-	stream_			io.Writer
-	exiter_			exiter
+	initFlags_ InitFlag
+	stream_    io.Writer
+	exiter_    exiter
 }
 
 // Structure representing CLI results, obtained from Climate.Parse()
 type Result struct {
+	Flags       []*clasp.Argument
+	Options     []*clasp.Argument
+	Values      []*clasp.Argument
+	ProgramName string
+	Argv        []string
 
-	Flags		[]*clasp.Argument
-	Options		[]*clasp.Argument
-	Values		[]*clasp.Argument
-	ProgramName	string
-	Argv		[]string
-
-	arguments_	*clasp.Arguments
-	parseFlags_	ParseFlag
-	stream_		io.Writer
-	exiter_		exiter
+	arguments_  *clasp.Arguments
+	parseFlags_ ParseFlag
+	stream_     io.Writer
+	exiter_     exiter
 }
 
 // Callback function for specification of Climate via DSL
@@ -114,24 +78,21 @@ type FlagFunc func()
 type OptionFunc func(option *clasp.Argument, specification *clasp.Specification)
 
 const (
-
-	InitFlag_None				InitFlag	=	1 << iota
-	InitFlag_PanicOnFailure		InitFlag	=	1 << iota
-	InitFlag_NoHelpFlag			InitFlag	=	1 << iota
-	InitFlag_NoVersionFlag		InitFlag	=	1 << iota
+	InitFlag_None           InitFlag = 1 << iota
+	InitFlag_PanicOnFailure InitFlag = 1 << iota
+	InitFlag_NoHelpFlag     InitFlag = 1 << iota
+	InitFlag_NoVersionFlag  InitFlag = 1 << iota
 )
 
 const (
-
-	ParseFlag_None				ParseFlag	=	1 << iota
-	ParseFlag_PanicOnFailure	ParseFlag	=	1 << iota
-	ParseFlag_DontCheckUnused	ParseFlag	=	1 << iota
+	ParseFlag_None            ParseFlag = 1 << iota
+	ParseFlag_PanicOnFailure  ParseFlag = 1 << iota
+	ParseFlag_DontCheckUnused ParseFlag = 1 << iota
 )
 
 const (
-
-	_libCLImate_FlagFunc	=	"_libCLImate_FlagFunc_F73BB1C0_92D7_4cd5_9C36_DB672290CBE7"
-	_libCLImate_OptionFunc	=	"_libCLImate_OptionFunc_F73BB1C0_92D7_4cd5_9C36_DB672290CBE7"
+	_libCLImate_FlagFunc   = "_libCLImate_FlagFunc_F73BB1C0_92D7_4cd5_9C36_DB672290CBE7"
+	_libCLImate_OptionFunc = "_libCLImate_OptionFunc_F73BB1C0_92D7_4cd5_9C36_DB672290CBE7"
 )
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -140,7 +101,7 @@ const (
 
 func parse_Exiter_from_options_(options ...interface{}) (result exiter, err error) {
 
-	for _, option := range(options) {
+	for _, option := range options {
 
 		switch v := option.(type) {
 
@@ -155,7 +116,7 @@ func parse_Exiter_from_options_(options ...interface{}) (result exiter, err erro
 
 func parse_Stream_from_options_(options ...interface{}) (result io.Writer, err error) {
 
-	for _, option := range(options) {
+	for _, option := range options {
 
 		switch v := option.(type) {
 
@@ -170,7 +131,7 @@ func parse_Stream_from_options_(options ...interface{}) (result io.Writer, err e
 
 func parse_InitFlags_from_options_(options ...interface{}) (result InitFlag, err error) {
 
-	for _, option := range(options) {
+	for _, option := range options {
 
 		switch v := option.(type) {
 
@@ -185,7 +146,7 @@ func parse_InitFlags_from_options_(options ...interface{}) (result InitFlag, err
 
 func parse_ParseFlags_from_options_(options ...interface{}) (result ParseFlag, err error) {
 
-	for _, option := range(options) {
+	for _, option := range options {
 
 		switch v := option.(type) {
 
@@ -200,9 +161,9 @@ func parse_ParseFlags_from_options_(options ...interface{}) (result ParseFlag, e
 
 func pointer_specifications_to_value_specifications(input []*clasp.Specification) (result []clasp.Specification) {
 
-	result	=	make([]clasp.Specification, len(input))
+	result = make([]clasp.Specification, len(input))
 
-	for i, a := range(input) {
+	for i, a := range input {
 
 		result[i] = *a
 	}
@@ -218,9 +179,9 @@ func pointer_specifications_to_value_specifications(input []*clasp.Specification
 // may not be nil) and arguments
 func Init(initFn InitFunc, options ...interface{}) (climate *Climate, err error) {
 
-	var initFlags	InitFlag
-	var stream		io.Writer
-	var exiter		exiter
+	var initFlags InitFlag
+	var stream io.Writer
+	var exiter exiter
 
 	if err == nil {
 
@@ -243,18 +204,18 @@ func Init(initFn InitFunc, options ...interface{}) (climate *Climate, err error)
 
 	if err == nil {
 
-		climate	=	&Climate{
+		climate = &Climate{
 
-			Specifications:		[]*clasp.Specification { },
+			Specifications: []*clasp.Specification{},
 			//ParseFlags:
 			//Version:
 			//VersionPrefix:
 			//InfoLines:
-			ProgramName: 	path.Base(os.Args[0]),
+			ProgramName: path.Base(os.Args[0]),
 
-			initFlags_:		initFlags,
-			stream_:		stream,
-			exiter_:		exiter,
+			initFlags_: initFlags,
+			stream_:    stream,
+			exiter_:    exiter,
 		}
 
 		if 0 == (initFlags & InitFlag_NoHelpFlag) {
@@ -325,10 +286,10 @@ func (cl *Climate) AddOptionFunc(option clasp.Specification, optionFn OptionFunc
 // arguments received by the process
 func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, err error) {
 
-	var parseFlags	ParseFlag
-	var stream		io.Writer
-	var exiter		exiter
-	var arguments	*clasp.Arguments
+	var parseFlags ParseFlag
+	var stream io.Writer
+	var exiter exiter
+	var arguments *clasp.Arguments
 
 	if err == nil {
 
@@ -351,7 +312,7 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 
 	if err == nil {
 
-		parse_params := clasp.ParseParams {
+		parse_params := clasp.ParseParams{
 
 			Specifications: pointer_specifications_to_value_specifications(cl.Specifications),
 		}
@@ -362,13 +323,13 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 
 			clasp.ShowUsage(parse_params.Specifications, clasp.UsageParams{
 
-				Version: cl.Version,
+				Version:       cl.Version,
 				VersionPrefix: cl.VersionPrefix,
-				InfoLines: cl.InfoLines,
-				ValuesString: cl.ValuesString,
-				Stream: stream,
-				Exiter: exiter,
-				ProgramName: arguments.ProgramName,
+				InfoLines:     cl.InfoLines,
+				ValuesString:  cl.ValuesString,
+				Stream:        stream,
+				Exiter:        exiter,
+				ProgramName:   arguments.ProgramName,
 			})
 		}
 
@@ -376,11 +337,11 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 
 			clasp.ShowVersion(parse_params.Specifications, clasp.UsageParams{
 
-				Version: cl.Version,
+				Version:       cl.Version,
 				VersionPrefix: cl.VersionPrefix,
-				Stream: stream,
-				Exiter: exiter,
-				ProgramName: arguments.ProgramName,
+				Stream:        stream,
+				Exiter:        exiter,
+				ProgramName:   arguments.ProgramName,
 			})
 		}
 
@@ -399,7 +360,7 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 
 						case FlagFunc:
 
-							fn();
+							fn()
 
 							argument.Use()
 						default:
@@ -414,7 +375,7 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 
 						case OptionFunc:
 
-							fn(argument, alias);
+							fn(argument, alias)
 
 							argument.Use()
 						default:
@@ -427,7 +388,6 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 		}
 	}
 
-
 	if err != nil {
 
 		if 0 != (ParseFlag_PanicOnFailure & parseFlags) {
@@ -438,17 +398,17 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 
 		result = Result{
 
-			Flags: arguments.Flags,
+			Flags:   arguments.Flags,
 			Options: arguments.Options,
-			Values: arguments.Values,
+			Values:  arguments.Values,
 
 			ProgramName: arguments.ProgramName,
-			Argv: argv,
+			Argv:        argv,
 
-			arguments_: arguments,
+			arguments_:  arguments,
 			parseFlags_: parseFlags,
-			stream_: stream,
-			exiter_: exiter,
+			stream_:     stream,
+			exiter_:     exiter,
 		}
 	}
 
@@ -459,8 +419,8 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 // the specified flags and options
 func (result Result) Verify(options ...interface{}) {
 
-	var err			error
-	var parseFlags	ParseFlag
+	var err error
+	var parseFlags ParseFlag
 
 	stream, _ := parse_Stream_from_options_(options...)
 	if stream == nil {
@@ -556,5 +516,3 @@ func (result Result) LookupOption(id interface{}) (*clasp.Argument, bool) {
 }
 
 /* ///////////////////////////// end of file //////////////////////////// */
-
-
