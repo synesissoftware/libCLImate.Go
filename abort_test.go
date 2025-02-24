@@ -1,8 +1,6 @@
-
 package libclimate_test
 
 import (
-
 	libclimate "github.com/synesissoftware/libCLImate.Go"
 
 	"bytes"
@@ -13,12 +11,12 @@ import (
 
 func Test_Abort_1(t *testing.T) {
 
-	climate, _ := libclimate.Init(func (cl *libclimate.Climate) (err error) {
+	climate, _ := libclimate.Init(func(cl *libclimate.Climate) (err error) {
 
 		return nil
-	});
+	})
 
-	stm	:=	new(bytes.Buffer)
+	stm := new(bytes.Buffer)
 	exiter := new(capture_exiter)
 
 	msg := "Some-failure-condition"
@@ -27,8 +25,8 @@ func Test_Abort_1(t *testing.T) {
 	climate.ProgramName = "myapp"
 	climate.Abort(msg, err, stm, exiter)
 
-	actual		:=	stm.String()
-	expected	:=	fmt.Sprintf("myapp: %s: %s\n", msg, err)
+	actual := stm.String()
+	expected := fmt.Sprintf("myapp: %s: %s\n", msg, err)
 
 	if expected != actual {
 
@@ -38,12 +36,12 @@ func Test_Abort_1(t *testing.T) {
 
 func Test_Abort_2(t *testing.T) {
 
-	climate, _ := libclimate.Init(func (cl *libclimate.Climate) (err error) {
+	climate, _ := libclimate.Init(func(cl *libclimate.Climate) (err error) {
 
 		return nil
-	});
+	})
 
-	stm	:=	new(bytes.Buffer)
+	stm := new(bytes.Buffer)
 	exiter := new(capture_exiter)
 
 	msg := "Some-failure-condition"
@@ -51,12 +49,11 @@ func Test_Abort_2(t *testing.T) {
 	climate.ProgramName = "myapp"
 	climate.Abort(msg, nil, stm, exiter)
 
-	actual		:=	stm.String()
-	expected	:=	fmt.Sprintf("myapp: %s\n", msg)
+	actual := stm.String()
+	expected := fmt.Sprintf("myapp: %s\n", msg)
 
 	if expected != actual {
 
 		t.Errorf("expected '%v' != actual '%v'", expected, actual)
 	}
 }
-
