@@ -8,6 +8,7 @@
 * added more test cases;
 * standard go formatting (for examples);
 * improved documentation markup;
+* `..._None` flags now have value 0 (and their types are changed from `int` to `int64`);
 
 
 ## 0.6.1-alpha2 - 25th February 2025

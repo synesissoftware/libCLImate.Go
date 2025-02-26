@@ -19,13 +19,13 @@ import (
 )
 
 // Type of flags passed to the [Init] method.
-type InitFlag int
+type InitFlag int64
 
 // Type of flags passed to the [Climate.Parse] and [Climate.ParseAndVerify] methods.
-type ParseFlag int
+type ParseFlag int64
 
 // Type of flags passed to the [Climate.AddFlag] and [Climate.AddOption] methods.
-type AliasFlag int
+type AliasFlag int64
 
 type exiter interface {
 	Exit(exitCode int)
@@ -76,14 +76,20 @@ type FlagFunc func()
 type OptionFunc func(option *clasp.Argument, specification *clasp.Specification)
 
 const (
-	InitFlag_None           InitFlag = 1 << iota
+	InitFlag_None InitFlag = 0
+)
+
+const (
 	InitFlag_PanicOnFailure InitFlag = 1 << iota
 	InitFlag_NoHelpFlag     InitFlag = 1 << iota
 	InitFlag_NoVersionFlag  InitFlag = 1 << iota
 )
 
 const (
-	ParseFlag_None            ParseFlag = 1 << iota
+	ParseFlag_None ParseFlag = 0
+)
+
+const (
 	ParseFlag_PanicOnFailure  ParseFlag = 1 << iota
 	ParseFlag_DontCheckUnused ParseFlag = 1 << iota
 )
