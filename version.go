@@ -4,7 +4,7 @@
 
 /*
  * Created: 22nd March 2019
- * Updated: 24th February 2025
+ * Updated: 26th February 2025
  */
 
 package libclimate
@@ -15,7 +15,7 @@ const (
 	VersionMajor uint16 = 0
 	VersionMinor uint16 = 6
 	VersionPatch uint16 = 1
-	VersionAB    uint16 = 0x4002
+	VersionAB    uint16 = 0x4003
 	Version      uint64 = (uint64(VersionMajor) << 48) + (uint64(VersionMinor) << 32) + (uint64(VersionPatch) << 16) + (uint64(VersionAB) << 0)
 )
 

@@ -12,9 +12,8 @@ Exactly equivalent example to **flag_and_option_specifications**, but using ``Ad
 package main
 
 import (
-
 	clasp "github.com/synesissoftware/CLASP.Go"
-	libclimate "github.com/synesissoftware/LibCLImate.Go"
+	libclimate "github.com/synesissoftware/libCLImate.Go"
 
 	"fmt"
 	"os"

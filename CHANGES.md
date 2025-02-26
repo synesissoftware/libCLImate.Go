@@ -1,6 +1,18 @@
 # **libCLImate.Go** Changes
 
 
+## 0.6.1-alpha3 - 26th February 2025
+
+* fixed all references to **LibCLImate.Go** (=> **libCLImate.Go**);
+* now `InitFlag_NoHelpFlag` and `InitFlag_NoVersionFlag` also suppress recognition of `"--help"` and `"--version"`, as well as their inclusion in usage;
+* `..._None` flags now have value 0 (and their types are changed from `int` to `int64`);
+* added **climate_test.go**;
+* added **/test/scratch/libver.go**;
+* added more test cases;
+* standard go formatting (for examples);
+* improved documentation markup;
+
+
 ## 0.6.1-alpha2 - 25th February 2025
 
 * Fixed module name (from **libclimate** to **github.com/synesissoftware/libCLImate.Go**);
@@ -9,7 +21,7 @@
 ## 0.6.1-alpha1 - 24th February 2025
 
 * updated for use of Go modules;
-# standard go formatting;
+* standard go formatting;
 
 
 ## 0.6.0 - 10th April 2019
