@@ -12,8 +12,6 @@ github.com/synesissoftware/LibCLImate.Go v0.0.0-20190410110648-f863e37150dd h1:K
 github.com/synesissoftware/LibCLImate.Go v0.0.0-20190410110648-f863e37150dd/go.mod h1:rZ9JTNKZmhA3YesRNo/0KnZewJReL6S9753ELIAP+qk=
 github.com/synesissoftware/STEGoL v0.0.0-20190330001846-560e2a134da1 h1:gjzrJrWmidiPhErkIA/lm2fBiGXVNF/UWzY53eebRUg=
 github.com/synesissoftware/STEGoL v0.0.0-20190330001846-560e2a134da1/go.mod h1:fLXaHg0WlvcjPSX669XZWm+FNyU6ezvGoEWmWSc6I8A=
-github.com/synesissoftware/libCLImate.Go v0.0.0-20190410110648-f863e37150dd h1:BSR8GI+MVJzEIyNKjeYWt0WMAv6SG9gsrOKkofEIg9I=
-github.com/synesissoftware/libCLImate.Go v0.0.0-20190410110648-f863e37150dd/go.mod h1:UlggNTyrtQb+ICRQNpt9fRLR32Ws8sPQwD/0nO4qZY0=
 github.com/synesissoftware/ver2go v0.0.0-20250213011429-1fbcb230c744 h1:/+nOiKrcuGd+oi/81p47CKtA3Q+Ct4YseOIMfKHcpsQ=
 github.com/synesissoftware/ver2go v0.0.0-20250213011429-1fbcb230c744/go.mod h1:ZvENMYQ3mjb9e5ymZL5OyQAa56ckYVTvAvycvYg8Vlw=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=
