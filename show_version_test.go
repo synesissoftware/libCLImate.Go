@@ -63,3 +63,31 @@ func Test_ShowVersion_2(t *testing.T) {
 		t.Errorf("expected '%v' != actual '%v'", expected, actual)
 	}
 }
+
+func Test_ShowVersion_2_NoVersionFlag(t *testing.T) {
+
+	stm := new(bytes.Buffer)
+	argv := []string{"bin/myapp", "--version"}
+
+	climate, err := libclimate.Init(func(cl *libclimate.Climate) (err error) {
+
+		cl.Version = []int{0, 1, 2}
+		cl.VersionPrefix = "v"
+
+		return nil
+	}, libclimate.InitFlag_NoVersionFlag)
+	if err != nil {
+
+		fmt.Fprintf(os.Stderr, "failed to create CLI parser: %v\n", err)
+	}
+
+	_, _ = climate.ParseAndVerify(argv, stm, stub_exiter{})
+
+	actual := stm.String()
+	expected := "myapp: unrecognised flag/option: --version\n"
+
+	if expected != actual {
+
+		t.Errorf("expected '%v' != actual '%v'", expected, actual)
+	}
+}

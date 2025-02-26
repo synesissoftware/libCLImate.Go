@@ -1,9 +1,9 @@
 package libclimate
 
 import (
-	"testing"
-
 	"github.com/stretchr/testify/require"
+
+	"testing"
 )
 
 const (

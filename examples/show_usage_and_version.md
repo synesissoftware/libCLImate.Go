@@ -12,7 +12,6 @@ Simple example supporting ```--help``` and ```--version```.
 package main
 
 import (
-
 	libclimate "github.com/synesissoftware/libCLImate.Go"
 
 	"fmt"

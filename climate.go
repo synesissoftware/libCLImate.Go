@@ -4,7 +4,7 @@
 
 /*
  * Created: 22nd March 2019
- * Updated: 24th February 2025
+ * Updated: 26th February 2025
  */
 
 package libclimate
@@ -319,30 +319,36 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 
 		arguments = clasp.Parse(argv, parse_params)
 
-		if arguments.FlagIsSpecified(clasp.HelpFlag()) {
+		if 0 == (cl.initFlags_ & InitFlag_NoHelpFlag) {
 
-			clasp.ShowUsage(parse_params.Specifications, clasp.UsageParams{
+			if arguments.FlagIsSpecified(clasp.HelpFlag()) {
 
-				Version:       cl.Version,
-				VersionPrefix: cl.VersionPrefix,
-				InfoLines:     cl.InfoLines,
-				ValuesString:  cl.ValuesString,
-				Stream:        stream,
-				Exiter:        exiter,
-				ProgramName:   arguments.ProgramName,
-			})
+				clasp.ShowUsage(parse_params.Specifications, clasp.UsageParams{
+
+					Version:       cl.Version,
+					VersionPrefix: cl.VersionPrefix,
+					InfoLines:     cl.InfoLines,
+					ValuesString:  cl.ValuesString,
+					Stream:        stream,
+					Exiter:        exiter,
+					ProgramName:   arguments.ProgramName,
+				})
+			}
 		}
 
-		if arguments.FlagIsSpecified(clasp.VersionFlag()) {
+		if 0 == (cl.initFlags_ & InitFlag_NoVersionFlag) {
 
-			clasp.ShowVersion(parse_params.Specifications, clasp.UsageParams{
+			if arguments.FlagIsSpecified(clasp.VersionFlag()) {
 
-				Version:       cl.Version,
-				VersionPrefix: cl.VersionPrefix,
-				Stream:        stream,
-				Exiter:        exiter,
-				ProgramName:   arguments.ProgramName,
-			})
+				clasp.ShowVersion(parse_params.Specifications, clasp.UsageParams{
+
+					Version:       cl.Version,
+					VersionPrefix: cl.VersionPrefix,
+					Stream:        stream,
+					Exiter:        exiter,
+					ProgramName:   arguments.ProgramName,
+				})
+			}
 		}
 
 		for i := 0; i != len(arguments.Arguments); i++ {
