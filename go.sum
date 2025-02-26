@@ -8,8 +8,6 @@ github.com/synesissoftware/ANGoLS v0.0.0-20250223045548-0f74389d834f h1:DdudEAfs
 github.com/synesissoftware/ANGoLS v0.0.0-20250223045548-0f74389d834f/go.mod h1:ahq5YxPZQpUPirzpCNMHWlpqAm5Pu3C5hRYkzl+7iiI=
 github.com/synesissoftware/CLASP.Go v0.0.0-20250223051136-3717dd3875f8 h1:WbXgqb2jo085jSGCmmdvgeLn1wBj80YWQx0ZBjhoBJ4=
 github.com/synesissoftware/CLASP.Go v0.0.0-20250223051136-3717dd3875f8/go.mod h1:RumhpS9UZSTb3j4R4OzGfkCjhXvo6OWo03ocgYkzYZ8=
-github.com/synesissoftware/LibCLImate.Go v0.0.0-20190410110648-f863e37150dd h1:KzlDdMHBpiUNaau5/uAaYBFldajOW9cFshAv1XUSkIU=
-github.com/synesissoftware/LibCLImate.Go v0.0.0-20190410110648-f863e37150dd/go.mod h1:rZ9JTNKZmhA3YesRNo/0KnZewJReL6S9753ELIAP+qk=
 github.com/synesissoftware/STEGoL v0.0.0-20190330001846-560e2a134da1 h1:gjzrJrWmidiPhErkIA/lm2fBiGXVNF/UWzY53eebRUg=
 github.com/synesissoftware/STEGoL v0.0.0-20190330001846-560e2a134da1/go.mod h1:fLXaHg0WlvcjPSX669XZWm+FNyU6ezvGoEWmWSc6I8A=
 github.com/synesissoftware/ver2go v0.0.0-20250213011429-1fbcb230c744 h1:/+nOiKrcuGd+oi/81p47CKtA3Q+Ct4YseOIMfKHcpsQ=
