@@ -1,4 +1,4 @@
-module libclimate
+module github.com/synesissoftware/libCLImate.Go
 
 go 1.23.6
 
