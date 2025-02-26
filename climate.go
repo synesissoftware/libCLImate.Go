@@ -18,14 +18,13 @@ import (
 	"path"
 )
 
-// Type of flags passed to the libclimate.Init() method
+// Type of flags passed to the [Init] method.
 type InitFlag int
 
-// Type of flags passed to the libclimate.Parse() method
+// Type of flags passed to the [Climate.Parse] and [Climate.ParseAndVerify] methods.
 type ParseFlag int
 
-// Type of flags passed to the libclimate.AddFlag(),
-// and libclimate.AddOption() methods
+// Type of flags passed to the [Climate.AddFlag] and [Climate.AddOption] methods.
 type AliasFlag int
 
 type exiter interface {
@@ -40,8 +39,7 @@ func (de *default_exiter) Exit(exitCode int) {
 	os.Exit(exitCode)
 }
 
-// Structure representing a CLI parsing context, obtained from
-// libclimate.Init()
+// Structure representing a CLI parsing context, obtained from [Init].
 type Climate struct {
 	Specifications []*clasp.Specification
 	ParseFlags     clasp.ParseFlag
@@ -56,7 +54,7 @@ type Climate struct {
 	exiter_    exiter
 }
 
-// Structure representing CLI results, obtained from Climate.Parse()
+// Structure representing CLI results, obtained from [Climate.Parse].
 type Result struct {
 	Flags       []*clasp.Argument
 	Options     []*clasp.Argument
@@ -70,7 +68,7 @@ type Result struct {
 	exiter_     exiter
 }
 
-// Callback function for specification of Climate via DSL
+// Callback function for specification of Climate via DSL.
 type InitFunc func(cl *Climate) error
 
 type FlagFunc func()
@@ -176,7 +174,7 @@ func pointer_specifications_to_value_specifications(input []*clasp.Specification
  */
 
 // Initialises a Climate instance, according to the given function (which
-// may not be nil) and arguments
+// may not be nil) and arguments.
 func Init(initFn InitFunc, options ...interface{}) (climate *Climate, err error) {
 
 	var initFlags InitFlag
@@ -254,13 +252,13 @@ func (cl *Climate) AddAlias(resolved_name, alias string) {
 	cl.Specifications = append(cl.Specifications, &f)
 }
 
-// Adds a (copy of the) flag to the Climate instance
+// Adds a (copy of the) flag to the Climate instance.
 func (cl *Climate) AddFlag(flag clasp.Specification, flags ...AliasFlag) {
 
 	cl.Specifications = append(cl.Specifications, &flag)
 }
 
-// Adds a (copy of the) flag to the Climate instance
+// Adds a (copy of the) flag to the Climate instance.
 func (cl *Climate) AddFlagFunc(flag clasp.Specification, flagFn FlagFunc, flags ...AliasFlag) {
 
 	newFlag := flag.SetExtra(_libCLImate_FlagFunc, flagFn)
@@ -268,13 +266,13 @@ func (cl *Climate) AddFlagFunc(flag clasp.Specification, flagFn FlagFunc, flags 
 	cl.Specifications = append(cl.Specifications, &newFlag)
 }
 
-// Adds a (copy of the) option to the Climate instance
+// Adds a (copy of the) option to the Climate instance.
 func (cl *Climate) AddOption(option clasp.Specification, flags ...AliasFlag) {
 
 	cl.Specifications = append(cl.Specifications, &option)
 }
 
-// Adds a (copy of the) option to the Climate instance
+// Adds a (copy of the) option to the Climate instance.
 func (cl *Climate) AddOptionFunc(option clasp.Specification, optionFn OptionFunc, flags ...AliasFlag) {
 
 	newOption := option.SetExtra(_libCLImate_OptionFunc, optionFn)
@@ -283,7 +281,7 @@ func (cl *Climate) AddOptionFunc(option clasp.Specification, optionFn OptionFunc
 }
 
 // Parses a command line, obtaining a Result instance representing the
-// arguments received by the process
+// arguments received by the process.
 func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, err error) {
 
 	var parseFlags ParseFlag
@@ -453,7 +451,7 @@ func (result Result) Verify(options ...interface{}) {
 	}
 }
 
-// Parses via Parse() and verifies via Verify()
+// Parses via [Climate.Parse] and verifies via [Result.Verify].
 //
 // Panics, rather than returns, if the ParseFlag_PanicOnFailure flag is
 // specified
@@ -508,14 +506,14 @@ func (result Result) FlagIsSpecified(id interface{}) bool {
 }
 
 // Looks for a flag with the given id - name, or the specification instance - and
-// returns it and the value true if found; if not, returns nil and false
+// returns it and the value true if found; if not, returns nil and false.
 func (result Result) LookupFlag(id interface{}) (*clasp.Argument, bool) {
 
 	return result.arguments_.LookupFlag(id)
 }
 
 // Looks for an option with the given id - name, or the specification instance - and
-// returns it and the value true if found; if not, returns nil and false
+// returns it and the value true if found; if not, returns nil and false.
 func (result Result) LookupOption(id interface{}) (*clasp.Argument, bool) {
 
 	return result.arguments_.LookupOption(id)

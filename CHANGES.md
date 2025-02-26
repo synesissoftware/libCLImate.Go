@@ -7,6 +7,7 @@
 * added **climate_test.go**;
 * added more test cases;
 * standard go formatting (for examples);
+* improved documentation markup;
 
 
 ## 0.6.1-alpha2 - 25th February 2025
