@@ -83,8 +83,8 @@ const (
 
 const (
 	InitFlag_PanicOnFailure InitFlag = 1 << iota // T.B.C.
-	InitFlag_NoHelpFlag     InitFlag = 1 << iota // T.B.C.
-	InitFlag_NoVersionFlag  InitFlag = 1 << iota // T.B.C.
+	InitFlag_NoHelpFlag                          // T.B.C.
+	InitFlag_NoVersionFlag                       // T.B.C.
 )
 
 const (
@@ -93,7 +93,7 @@ const (
 
 const (
 	ParseFlag_PanicOnFailure  ParseFlag = 1 << iota // T.B.C.
-	ParseFlag_DontCheckUnused ParseFlag = 1 << iota // T.B.C.
+	ParseFlag_DontCheckUnused                       // T.B.C.
 )
 
 const (
