@@ -4,7 +4,7 @@
 
 /*
  * Created: 22nd March 2019
- * Updated: 26th February 2025
+ * Updated: 28th February 2025
  */
 
 package libclimate
@@ -71,27 +71,29 @@ type Result struct {
 // Callback function for specification of Climate via DSL.
 type InitFunc func(cl *Climate) error
 
+// T.B.C.
 type FlagFunc func()
 
+// T.B.C.
 type OptionFunc func(option *clasp.Argument, specification *clasp.Specification)
 
 const (
-	InitFlag_None InitFlag = 0
+	InitFlag_None InitFlag = 0 // T.B.C.
 )
 
 const (
-	InitFlag_PanicOnFailure InitFlag = 1 << iota
-	InitFlag_NoHelpFlag     InitFlag = 1 << iota
-	InitFlag_NoVersionFlag  InitFlag = 1 << iota
+	InitFlag_PanicOnFailure InitFlag = 1 << iota // T.B.C.
+	InitFlag_NoHelpFlag                          // T.B.C.
+	InitFlag_NoVersionFlag                       // T.B.C.
 )
 
 const (
-	ParseFlag_None ParseFlag = 0
+	ParseFlag_None ParseFlag = 0 // T.B.C.
 )
 
 const (
-	ParseFlag_PanicOnFailure  ParseFlag = 1 << iota
-	ParseFlag_DontCheckUnused ParseFlag = 1 << iota
+	ParseFlag_PanicOnFailure  ParseFlag = 1 << iota // T.B.C.
+	ParseFlag_DontCheckUnused                       // T.B.C.
 )
 
 const (
