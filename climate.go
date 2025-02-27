@@ -41,13 +41,13 @@ func (de *default_exiter) Exit(exitCode int) {
 
 // Structure representing a CLI parsing context, obtained from [Init].
 type Climate struct {
-	Specifications []*clasp.Specification
-	ParseFlags     clasp.ParseFlag
-	Version        interface{}
-	VersionPrefix  string
-	InfoLines      []string
-	ValuesString   string
-	ProgramName    string
+	Specifications []*clasp.Specification // T.B.C.
+	ParseFlags     clasp.ParseFlag        // T.B.C.
+	Version        interface{}            // T.B.C.
+	VersionPrefix  string                 // T.B.C.
+	InfoLines      []string               // T.B.C.
+	ValuesString   string                 // T.B.C.
+	ProgramName    string                 // T.B.C.
 
 	initFlags InitFlag
 	stream    io.Writer
@@ -56,11 +56,11 @@ type Climate struct {
 
 // Structure representing CLI results, obtained from [Climate.Parse].
 type Result struct {
-	Flags       []*clasp.Argument
-	Options     []*clasp.Argument
-	Values      []*clasp.Argument
-	ProgramName string
-	Argv        []string
+	Flags       []*clasp.Argument // T.B.C.
+	Options     []*clasp.Argument // T.B.C.
+	Values      []*clasp.Argument // T.B.C.
+	ProgramName string            // T.B.C.
+	Argv        []string          // T.B.C.
 
 	arguments  *clasp.Arguments
 	parseFlags ParseFlag

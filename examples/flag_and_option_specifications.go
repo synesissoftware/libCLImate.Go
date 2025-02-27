@@ -14,8 +14,8 @@ func main() {
 
 	// Specify specifications, parse, and checking standard flags
 
-	flag_Debug := clasp.Specification{clasp.FlagType, "--debug", []string{"-d"}, "runs in Debug mode", nil, 0, nil}
-	option_Verbosity := clasp.Specification{clasp.OptionType, "--verbosity", []string{"-v"}, "specifies the verbosity", []string{"terse", "quiet", "silent", "chatty"}, 0, nil}
+	flag_Debug := clasp.Flag("--debug").SetAlias("-d").SetHelp("runs in Debug mode")
+	option_Verbosity := clasp.Option("--verbosity").SetAlias("-v").SetHelp("specifies the verbosity").SetValues("terse", "quiet", "silent", "chatty")
 
 	climate, err := libclimate.Init(func(cl *libclimate.Climate) (err error) {
 
@@ -23,7 +23,7 @@ func main() {
 		cl.AddOption(option_Verbosity)
 		cl.AddAlias("--verbosity=chatty", "-c")
 
-		cl.Version = "0.0.1"
+		cl.Version = "0.0.2"
 
 		cl.InfoLines = []string{"libCLImate.Go Examples", "", ":version:", ""}
 
