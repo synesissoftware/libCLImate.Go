@@ -1,6 +1,14 @@
 # **libCLImate.Go** Changes
 
 
+## 0.6.1-alpha4 - 28th February 2025
+
+* - removed unncessary use of `iota`;
+* + added more test cases;
+* ~ tidying / doc-markup;
+* ~ formatting;
+
+
 ## 0.6.1-alpha3 - 26th February 2025
 
 * fixed all references to **LibCLImate.Go** (=> **libCLImate.Go**);
