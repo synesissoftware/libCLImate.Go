@@ -49,9 +49,9 @@ type Climate struct {
 	ValuesString   string
 	ProgramName    string
 
-	initFlags_ InitFlag
-	stream_    io.Writer
-	exiter_    exiter
+	initFlags InitFlag
+	stream    io.Writer
+	exiter    exiter
 }
 
 // Structure representing CLI results, obtained from [Climate.Parse].
@@ -62,10 +62,10 @@ type Result struct {
 	ProgramName string
 	Argv        []string
 
-	arguments_  *clasp.Arguments
-	parseFlags_ ParseFlag
-	stream_     io.Writer
-	exiter_     exiter
+	arguments  *clasp.Arguments
+	parseFlags ParseFlag
+	stream     io.Writer
+	exiter     exiter
 }
 
 // Callback function for specification of Climate via DSL.
@@ -219,9 +219,9 @@ func Init(initFn InitFunc, options ...interface{}) (climate *Climate, err error)
 			//InfoLines:
 			ProgramName: path.Base(os.Args[0]),
 
-			initFlags_: initFlags,
-			stream_:    stream,
-			exiter_:    exiter,
+			initFlags: initFlags,
+			stream:    stream,
+			exiter:    exiter,
 		}
 
 		if 0 == (initFlags & InitFlag_NoHelpFlag) {
@@ -313,7 +313,7 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 	}
 	if err == nil && exiter == nil {
 
-		exiter = cl.exiter_
+		exiter = cl.exiter
 	}
 
 	if err == nil {
@@ -325,7 +325,7 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 
 		arguments = clasp.Parse(argv, parse_params)
 
-		if 0 == (cl.initFlags_ & InitFlag_NoHelpFlag) {
+		if 0 == (cl.initFlags & InitFlag_NoHelpFlag) {
 
 			if arguments.FlagIsSpecified(clasp.HelpFlag()) {
 
@@ -342,7 +342,7 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 			}
 		}
 
-		if 0 == (cl.initFlags_ & InitFlag_NoVersionFlag) {
+		if 0 == (cl.initFlags & InitFlag_NoVersionFlag) {
 
 			if arguments.FlagIsSpecified(clasp.VersionFlag()) {
 
@@ -417,10 +417,10 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 			ProgramName: arguments.ProgramName,
 			Argv:        argv,
 
-			arguments_:  arguments,
-			parseFlags_: parseFlags,
-			stream_:     stream,
-			exiter_:     exiter,
+			arguments:  arguments,
+			parseFlags: parseFlags,
+			stream:     stream,
+			exiter:     exiter,
 		}
 	}
 
@@ -444,17 +444,17 @@ func (result Result) Verify(options ...interface{}) {
 
 		parseFlags, err = parse_ParseFlags_from_options_(options...)
 	}
-	parseFlags |= result.parseFlags_
+	parseFlags |= result.parseFlags
 
 	if 0 == (ParseFlag_DontCheckUnused & parseFlags) {
 
 		// Check for any unrecognised flags or options
 
-		if unused := result.arguments_.GetUnusedFlagsAndOptions(); 0 != len(unused) {
+		if unused := result.arguments.GetUnusedFlagsAndOptions(); 0 != len(unused) {
 
-			fmt.Fprintf(stream, "%s: unrecognised flag/option: %s\n", result.arguments_.ProgramName, unused[0].Str())
+			fmt.Fprintf(stream, "%s: unrecognised flag/option: %s\n", result.arguments.ProgramName, unused[0].Str())
 
-			result.exiter_.Exit(1)
+			result.exiter.Exit(1)
 		}
 	}
 }
@@ -493,7 +493,7 @@ func (cl Climate) Abort(message string, err error, options ...interface{}) {
 	exiter, _ = parse_Exiter_from_options_(options...)
 	if exiter == nil {
 
-		exiter = cl.exiter_
+		exiter = cl.exiter
 	}
 
 	if err != nil {
@@ -510,21 +510,21 @@ func (cl Climate) Abort(message string, err error, options ...interface{}) {
 // Determines if the given flag is specified
 func (result Result) FlagIsSpecified(id interface{}) bool {
 
-	return result.arguments_.FlagIsSpecified(id)
+	return result.arguments.FlagIsSpecified(id)
 }
 
 // Looks for a flag with the given id - name, or the specification instance - and
 // returns it and the value true if found; if not, returns nil and false.
 func (result Result) LookupFlag(id interface{}) (*clasp.Argument, bool) {
 
-	return result.arguments_.LookupFlag(id)
+	return result.arguments.LookupFlag(id)
 }
 
 // Looks for an option with the given id - name, or the specification instance - and
 // returns it and the value true if found; if not, returns nil and false.
 func (result Result) LookupOption(id interface{}) (*clasp.Argument, bool) {
 
-	return result.arguments_.LookupOption(id)
+	return result.arguments.LookupOption(id)
 }
 
 /* ///////////////////////////// end of file //////////////////////////// */
