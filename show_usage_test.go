@@ -1,7 +1,7 @@
 package libclimate_test
 
 import (
-	angols "github.com/synesissoftware/ANGoLS"
+	angols_slices "github.com/synesissoftware/ANGoLS/slices"
 	clasp "github.com/synesissoftware/CLASP.Go"
 	libclimate "github.com/synesissoftware/libCLImate.Go"
 
@@ -51,12 +51,12 @@ func Test_ShowUsage_1(t *testing.T) {
 		"\t\tShows version information and exits",
 	}
 
-	actual, _ = angols.SelectSliceOfString(actual, func(_ int, line string) (bool, error) {
+	actual, _ = angols_slices.SelectSliceOfString(actual, func(_ int, line string) (bool, error) {
 
 		return 0 != len(line), nil
 	})
 
-	if !angols.EqualSliceOfString(expected, actual) {
+	if !angols_slices.EqualSliceOfString(expected, actual) {
 
 		t.Errorf("expected \n'%v'\n != actual \n'%v'",
 			lines_to_display_string_(expected),
@@ -103,12 +103,12 @@ func Test_ShowUsage_2(t *testing.T) {
 		"\t\tShows version information and exits",
 	}
 
-	actual, _ = angols.SelectSliceOfString(actual, func(_ int, line string) (bool, error) {
+	actual, _ = angols_slices.SelectSliceOfString(actual, func(_ int, line string) (bool, error) {
 
 		return 0 != len(line), nil
 	})
 
-	if !angols.EqualSliceOfString(expected, actual) {
+	if !angols_slices.EqualSliceOfString(expected, actual) {
 
 		t.Errorf("expected \n'%v'\n != actual \n'%v'",
 			lines_to_display_string_(expected),
@@ -168,12 +168,12 @@ func Test_ShowUsage_3(t *testing.T) {
 		"\t\t\thigh",
 	}
 
-	actual, _ = angols.SelectSliceOfString(actual, func(_ int, line string) (bool, error) {
+	actual, _ = angols_slices.SelectSliceOfString(actual, func(_ int, line string) (bool, error) {
 
 		return 0 != len(line), nil
 	})
 
-	if !angols.EqualSliceOfString(expected, actual) {
+	if !angols_slices.EqualSliceOfString(expected, actual) {
 
 		t.Errorf("expected \n'%v'\n != actual \n'%v'",
 			lines_to_display_string_(expected),
@@ -311,12 +311,12 @@ func Test_ShowUsage_3_NoVersionFlag(t *testing.T) {
 		"\t\t\thigh",
 	}
 
-	actual, _ = angols.SelectSliceOfString(actual, func(_ int, line string) (bool, error) {
+	actual, _ = angols_slices.SelectSliceOfString(actual, func(_ int, line string) (bool, error) {
 
 		return 0 != len(line), nil
 	})
 
-	if !angols.EqualSliceOfString(expected, actual) {
+	if !angols_slices.EqualSliceOfString(expected, actual) {
 
 		t.Errorf("expected \n'%v'\n != actual \n'%v'",
 			lines_to_display_string_(expected),

@@ -1,6 +1,11 @@
 # **libCLImate.Go** Changes
 
 
+## 0.7.0-alpha2 - 28th February 2025
+
+* ~ fixed use of **ANGoLS**' `slices` package;
+
+
 ## 0.7.0-alpha1 - 28th February 2025
 
 * + added **examples/bit_flags.go**;
