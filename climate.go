@@ -4,7 +4,7 @@
 
 /*
  * Created: 22nd March 2019
- * Updated: 28th February 2025
+ * Updated: 1st March 2025
  */
 
 package libclimate
@@ -41,13 +41,13 @@ func (de *default_exiter) Exit(exitCode int) {
 
 // Structure representing a CLI parsing context, obtained from [Init].
 type Climate struct {
-	Specifications []*clasp.Specification // T.B.C.
+	Specifications []*clasp.Specification // The specifications created by [Init].
 	ParseFlags     clasp.ParseFlag        // T.B.C.
-	Version        interface{}            // T.B.C.
-	VersionPrefix  string                 // T.B.C.
-	InfoLines      []string               // T.B.C.
-	ValuesString   string                 // T.B.C.
-	ProgramName    string                 // T.B.C.
+	Version        interface{}            // Version field that can be specified by application code in the function called by [Init].
+	VersionPrefix  string                 // Version-prefix field that can be specified by application code in the function called by [Init].
+	InfoLines      []string               // Information lines field that can be specified by application code in the function called by [Init].
+	ValuesString   string                 // Values-string field that can be specified by application code in the function called by [Init].
+	ProgramName    string                 // Program-name field that can be specified by application code in the function called by [Init]. Defaults to `os.Args[0]`.
 
 	initFlags InitFlag
 	stream    io.Writer
@@ -56,11 +56,11 @@ type Climate struct {
 
 // Structure representing CLI results, obtained from [Climate.Parse].
 type Result struct {
-	Flags       []*clasp.Argument // T.B.C.
-	Options     []*clasp.Argument // T.B.C.
-	Values      []*clasp.Argument // T.B.C.
-	ProgramName string            // T.B.C.
-	Argv        []string          // T.B.C.
+	Flags       []*clasp.Argument // Array of all flags.
+	Options     []*clasp.Argument // Array of all options.
+	Values      []*clasp.Argument // Array of all values.
+	ProgramName string            // The program name inferred by [Init], which may be overridden in the function called by [Init].
+	Argv        []string          // The original argument string array passed to [Parse].
 
 	arguments  *clasp.Arguments
 	parseFlags ParseFlag
@@ -71,29 +71,31 @@ type Result struct {
 // Callback function for specification of Climate via DSL.
 type InitFunc func(cl *Climate) error
 
-// T.B.C.
+// Type of callback function that may be specified to [Climate.AddFlagFunc].
 type FlagFunc func()
 
-// T.B.C.
+// Type of callback function that may be specified to
+// [Climate.AddOptionFunc], which receives the argument and its
+// specification.
 type OptionFunc func(option *clasp.Argument, specification *clasp.Specification)
 
 const (
-	InitFlag_None InitFlag = 0 // T.B.C.
+	InitFlag_None InitFlag = 0 // No initialisation flags specified.
 )
 
 const (
-	InitFlag_PanicOnFailure InitFlag = 1 << iota // T.B.C.
-	InitFlag_NoHelpFlag                          // T.B.C.
-	InitFlag_NoVersionFlag                       // T.B.C.
+	InitFlag_PanicOnFailure InitFlag = 1 << iota // Causes [Init] to panic if an error encountered during processing.
+	InitFlag_NoHelpFlag                          // Suppresses the provision and processing of a help flag (aka "--help").
+	InitFlag_NoVersionFlag                       // Suppresses the provision and processing of a version flag (aka "--version").
 )
 
 const (
-	ParseFlag_None ParseFlag = 0 // T.B.C.
+	ParseFlag_None ParseFlag = 0 // No parse flags specified.
 )
 
 const (
-	ParseFlag_PanicOnFailure  ParseFlag = 1 << iota // T.B.C.
-	ParseFlag_DontCheckUnused                       // T.B.C.
+	ParseFlag_PanicOnFailure  ParseFlag = 1 << iota // Causes [Climate.Parse] to panic if an error encountered during processing.
+	ParseFlag_DontCheckUnused                       // Causes [Climate.Verify] to ignore unrecognised arguments.
 )
 
 const (
@@ -210,6 +212,11 @@ func Init(initFn InitFunc, options ...interface{}) (climate *Climate, err error)
 
 	if err == nil {
 
+		var program_name string
+		if 0 != len(os.Args[0]) {
+			program_name = path.Base(os.Args[0])
+		}
+
 		climate = &Climate{
 
 			Specifications: []*clasp.Specification{},
@@ -217,7 +224,7 @@ func Init(initFn InitFunc, options ...interface{}) (climate *Climate, err error)
 			//Version:
 			//VersionPrefix:
 			//InfoLines:
-			ProgramName: path.Base(os.Args[0]),
+			ProgramName: program_name,
 
 			initFlags: initFlags,
 			stream:    stream,
