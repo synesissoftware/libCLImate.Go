@@ -4,7 +4,7 @@
 
 /*
  * Created: 22nd March 2019
- * Updated: 28th February 2025
+ * Updated: 1st March 2025
  */
 
 package libclimate
@@ -41,59 +41,61 @@ func (de *default_exiter) Exit(exitCode int) {
 
 // Structure representing a CLI parsing context, obtained from [Init].
 type Climate struct {
-	Specifications []*clasp.Specification
-	ParseFlags     clasp.ParseFlag
-	Version        interface{}
-	VersionPrefix  string
-	InfoLines      []string
-	ValuesString   string
-	ProgramName    string
+	Specifications []*clasp.Specification // The specifications created by [Init].
+	ParseFlags     clasp.ParseFlag        // T.B.C.
+	Version        interface{}            // Version field that can be specified by application code in the function called by [Init].
+	VersionPrefix  string                 // Version-prefix field that can be specified by application code in the function called by [Init].
+	InfoLines      []string               // Information lines field that can be specified by application code in the function called by [Init].
+	ValuesString   string                 // Values-string field that can be specified by application code in the function called by [Init].
+	ProgramName    string                 // Program-name field that can be specified by application code in the function called by [Init]. Defaults to `os.Args[0]`.
 
-	initFlags_ InitFlag
-	stream_    io.Writer
-	exiter_    exiter
+	initFlags InitFlag
+	stream    io.Writer
+	exiter    exiter
 }
 
 // Structure representing CLI results, obtained from [Climate.Parse].
 type Result struct {
-	Flags       []*clasp.Argument
-	Options     []*clasp.Argument
-	Values      []*clasp.Argument
-	ProgramName string
-	Argv        []string
+	Flags       []*clasp.Argument // Array of all flags.
+	Options     []*clasp.Argument // Array of all options.
+	Values      []*clasp.Argument // Array of all values.
+	ProgramName string            // The program name inferred by [Init], which may be overridden in the function called by [Init].
+	Argv        []string          // The original argument string array passed to [Parse].
 
-	arguments_  *clasp.Arguments
-	parseFlags_ ParseFlag
-	stream_     io.Writer
-	exiter_     exiter
+	arguments  *clasp.Arguments
+	parseFlags ParseFlag
+	stream     io.Writer
+	exiter     exiter
 }
 
 // Callback function for specification of Climate via DSL.
 type InitFunc func(cl *Climate) error
 
-// T.B.C.
+// Type of callback function that may be specified to [Climate.AddFlagFunc].
 type FlagFunc func()
 
-// T.B.C.
+// Type of callback function that may be specified to
+// [Climate.AddOptionFunc], which receives the argument and its
+// specification.
 type OptionFunc func(option *clasp.Argument, specification *clasp.Specification)
 
 const (
-	InitFlag_None InitFlag = 0 // T.B.C.
+	InitFlag_None InitFlag = 0 // No initialisation flags specified.
 )
 
 const (
-	InitFlag_PanicOnFailure InitFlag = 1 << iota // T.B.C.
-	InitFlag_NoHelpFlag                          // T.B.C.
-	InitFlag_NoVersionFlag                       // T.B.C.
+	InitFlag_PanicOnFailure InitFlag = 1 << iota // Causes [Init] to panic if an error encountered during processing.
+	InitFlag_NoHelpFlag                          // Suppresses the provision and processing of a help flag (aka "--help").
+	InitFlag_NoVersionFlag                       // Suppresses the provision and processing of a version flag (aka "--version").
 )
 
 const (
-	ParseFlag_None ParseFlag = 0 // T.B.C.
+	ParseFlag_None ParseFlag = 0 // No parse flags specified.
 )
 
 const (
-	ParseFlag_PanicOnFailure  ParseFlag = 1 << iota // T.B.C.
-	ParseFlag_DontCheckUnused                       // T.B.C.
+	ParseFlag_PanicOnFailure  ParseFlag = 1 << iota // Causes [Climate.Parse] to panic if an error encountered during processing.
+	ParseFlag_DontCheckUnused                       // Causes [Climate.Verify] to ignore unrecognised arguments.
 )
 
 const (
@@ -210,6 +212,11 @@ func Init(initFn InitFunc, options ...interface{}) (climate *Climate, err error)
 
 	if err == nil {
 
+		var program_name string
+		if 0 != len(os.Args[0]) {
+			program_name = path.Base(os.Args[0])
+		}
+
 		climate = &Climate{
 
 			Specifications: []*clasp.Specification{},
@@ -217,11 +224,11 @@ func Init(initFn InitFunc, options ...interface{}) (climate *Climate, err error)
 			//Version:
 			//VersionPrefix:
 			//InfoLines:
-			ProgramName: path.Base(os.Args[0]),
+			ProgramName: program_name,
 
-			initFlags_: initFlags,
-			stream_:    stream,
-			exiter_:    exiter,
+			initFlags: initFlags,
+			stream:    stream,
+			exiter:    exiter,
 		}
 
 		if 0 == (initFlags & InitFlag_NoHelpFlag) {
@@ -313,7 +320,7 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 	}
 	if err == nil && exiter == nil {
 
-		exiter = cl.exiter_
+		exiter = cl.exiter
 	}
 
 	if err == nil {
@@ -325,7 +332,7 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 
 		arguments = clasp.Parse(argv, parse_params)
 
-		if 0 == (cl.initFlags_ & InitFlag_NoHelpFlag) {
+		if 0 == (cl.initFlags & InitFlag_NoHelpFlag) {
 
 			if arguments.FlagIsSpecified(clasp.HelpFlag()) {
 
@@ -342,7 +349,7 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 			}
 		}
 
-		if 0 == (cl.initFlags_ & InitFlag_NoVersionFlag) {
+		if 0 == (cl.initFlags & InitFlag_NoVersionFlag) {
 
 			if arguments.FlagIsSpecified(clasp.VersionFlag()) {
 
@@ -417,10 +424,10 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 			ProgramName: arguments.ProgramName,
 			Argv:        argv,
 
-			arguments_:  arguments,
-			parseFlags_: parseFlags,
-			stream_:     stream,
-			exiter_:     exiter,
+			arguments:  arguments,
+			parseFlags: parseFlags,
+			stream:     stream,
+			exiter:     exiter,
 		}
 	}
 
@@ -444,17 +451,17 @@ func (result Result) Verify(options ...interface{}) {
 
 		parseFlags, err = parse_ParseFlags_from_options_(options...)
 	}
-	parseFlags |= result.parseFlags_
+	parseFlags |= result.parseFlags
 
 	if 0 == (ParseFlag_DontCheckUnused & parseFlags) {
 
 		// Check for any unrecognised flags or options
 
-		if unused := result.arguments_.GetUnusedFlagsAndOptions(); 0 != len(unused) {
+		if unused := result.arguments.GetUnusedFlagsAndOptions(); 0 != len(unused) {
 
-			fmt.Fprintf(stream, "%s: unrecognised flag/option: %s\n", result.arguments_.ProgramName, unused[0].Str())
+			fmt.Fprintf(stream, "%s: unrecognised flag/option: %s\n", result.arguments.ProgramName, unused[0].Str())
 
-			result.exiter_.Exit(1)
+			result.exiter.Exit(1)
 		}
 	}
 }
@@ -493,7 +500,7 @@ func (cl Climate) Abort(message string, err error, options ...interface{}) {
 	exiter, _ = parse_Exiter_from_options_(options...)
 	if exiter == nil {
 
-		exiter = cl.exiter_
+		exiter = cl.exiter
 	}
 
 	if err != nil {
@@ -510,21 +517,21 @@ func (cl Climate) Abort(message string, err error, options ...interface{}) {
 // Determines if the given flag is specified
 func (result Result) FlagIsSpecified(id interface{}) bool {
 
-	return result.arguments_.FlagIsSpecified(id)
+	return result.arguments.FlagIsSpecified(id)
 }
 
 // Looks for a flag with the given id - name, or the specification instance - and
 // returns it and the value true if found; if not, returns nil and false.
 func (result Result) LookupFlag(id interface{}) (*clasp.Argument, bool) {
 
-	return result.arguments_.LookupFlag(id)
+	return result.arguments.LookupFlag(id)
 }
 
 // Looks for an option with the given id - name, or the specification instance - and
 // returns it and the value true if found; if not, returns nil and false.
 func (result Result) LookupOption(id interface{}) (*clasp.Argument, bool) {
 
-	return result.arguments_.LookupOption(id)
+	return result.arguments.LookupOption(id)
 }
 
 /* ///////////////////////////// end of file //////////////////////////// */

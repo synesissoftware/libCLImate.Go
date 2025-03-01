@@ -12,7 +12,6 @@ Example illustrating various kinds of *flag* and *option* specifications, includ
 package main
 
 import (
-
 	clasp "github.com/synesissoftware/CLASP.Go"
 	libclimate "github.com/synesissoftware/libCLImate.Go"
 
@@ -24,29 +23,36 @@ func main() {
 
 	// Specify specifications, parse, and checking standard flags
 
-	flag_Debug			:=	clasp.Alias{ clasp.Flag, "--debug", []string{ "-d" }, "runs in Debug mode", nil, 0, nil }
-	option_Verbosity	:=	clasp.Alias{ clasp.Option, "--verbosity", []string{ "-v" }, "specifies the verbosity", []string{ "terse", "quiet", "silent", "chatty" }, 0, nil }
+	flag_Debug := clasp.Flag("--debug").SetAlias("-d").SetHelp("runs in Debug mode")
+	option_Verbosity := clasp.Option("--verbosity").SetAlias("-v").SetHelp("specifies the verbosity").SetValues("terse", "quiet", "silent", "chatty")
 
-
-	climate, err := libclimate.Init(func (cl *libclimate.Climate) (err error) {
+	climate, err := libclimate.Init(func(cl *libclimate.Climate) (err error) {
 
 		cl.AddFlag(flag_Debug)
 		cl.AddOption(option_Verbosity)
 		cl.AddAlias("--verbosity=chatty", "-c")
 
-		cl.Version = "0.0.1"
+		cl.Version = "0.0.2"
 
-		cl.InfoLines = []string { "libCLImate.Go Examples", "", ":version:", "" }
+		cl.InfoLines = []string{
+			"libCLImate.Go Examples",
+			"",
+			":version:",
+			"",
+		}
 
 		return nil
-	});
+	})
 	if err != nil {
 
 		fmt.Fprintf(os.Stderr, "failed to create CLI parser: %v\n", err)
 	}
 
 	result, _ := climate.Parse(os.Args, libclimate.ParseFlag_PanicOnFailure)
+	if err != nil {
 
+		panic(err)
+	}
 
 	// Program-specific processing of flags/options
 
@@ -62,7 +68,6 @@ func main() {
 
 	result.Verify(libclimate.ParseFlag_PanicOnFailure)
 
-
 	// Finish normal processing
 
 	return
@@ -75,8 +80,8 @@ func main() {
 
 If executed with no arguments
 
-```
-    go run examples/flag_and_option_specifications.go
+```bash
+go run examples/flag_and_option_specifications.go
 ```
 
 it gives the output:
@@ -88,8 +93,8 @@ it gives the output:
 
 If executed with the arguments
 
-```
-    go run examples/flag_and_option_specifications.go --help
+```bash
+go run examples/flag_and_option_specifications.go --help
 ```
 
 it gives the output:
@@ -130,8 +135,8 @@ flags/options:
 
 If executed with the arguments
 
-```
-    go run examples/flag_and_option_specifications.go --debug --verbosity=silent
+```bash
+go run examples/flag_and_option_specifications.go --debug --verbosity=silent
 ```
 
 it gives the output:
@@ -145,8 +150,8 @@ Debug mode is specified
 
 If executed with the arguments
 
-```
-    go run examples/flag_and_option_specifications.go -v silent -d
+```bash
+	go run examples/flag_and_option_specifications.go -v silent -d
 ```
 
 it gives the (same) output:
@@ -160,8 +165,8 @@ Debug mode is specified
 
 If executed with the arguments
 
-```
-    go run examples/flag_and_option_specifications.go -c -d
+```bash
+go run examples/flag_and_option_specifications.go -c -d
 ```
 
 it gives the output:
@@ -175,8 +180,8 @@ Debug mode is specified
 
 If executed with the arguments
 
-```
-    go run examples/flag_and_option_specifications.go -dc
+```bash
+go run examples/flag_and_option_specifications.go -dc
 ```
 
 it gives the (same) output:
@@ -185,3 +190,7 @@ it gives the (same) output:
 verbosity is specified as: chatty
 Debug mode is specified
 ```
+
+
+<!-- ########################### end of file ########################### -->
+
