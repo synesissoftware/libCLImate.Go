@@ -1,6 +1,17 @@
 # **libCLImate.Go** Changes
 
 
+## 0.7.0-alpha1 - 28th February 2025
+
+* + added **examples/bit_flags.go**;
+* ~ improved documentation markup;
+
+
+## 0.6.1-alpha5 - 28th February 2025
+
+* ~ updated dependencies;
+
+
 ## 0.6.1-alpha4 - 28th February 2025
 
 * - removed unncessary use of `iota`;
@@ -84,4 +95,7 @@ NOTE: requires latest version (0.14.2) of **CLASP.Go** (https://github.com/synes
 ## 0.1.0 - 23rd March 2019
 
 FIRST PUBLIC RELEASE
+
+
+<!-- ########################### end of file ########################### -->
 

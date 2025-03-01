@@ -17,7 +17,12 @@ func main() {
 
 		cl.Version = "0.0.1"
 
-		cl.InfoLines = []string{"libCLImate.Go Examples", "", ":version:", ""}
+		cl.InfoLines = []string{
+			"libCLImate.Go Examples",
+			"",
+			":version:",
+			"",
+		}
 
 		return nil
 	})

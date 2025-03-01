@@ -16,7 +16,12 @@ func main() {
 
 		// specify features HERE
 		cl.Version = "0.0.1"
-		cl.InfoLines = []string{"Example program", "", ":version:", ""}
+		cl.InfoLines = []string{
+			"Example program",
+			"",
+			":version:",
+			"",
+		}
 
 		cl.AddFlag(clasp.Flag("--debug").SetHelp("runs in Debug mode").SetAlias("-d"))
 

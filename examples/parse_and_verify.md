@@ -23,34 +23,41 @@ func main() {
 
 	// Specify specifications, parse, and checking standard flags
 
-	flag_Debug			:=	clasp.Alias{ clasp.FlagType, "--debug", []string{ "-d" }, "runs in Debug mode", nil, 0, nil }
-	option_Verbosity	:=	clasp.Alias{ clasp.OptionType, "--verbosity", []string{ "-v" }, "specifies the verbosity", []string{ "terse", "quiet", "silent", "chatty" }, 0, nil }
+	flag_Debug := clasp.Flag("--debug").SetAlias("-d").SetHelp("runs in Debug mode")
+	option_Verbosity := clasp.Option("--verbosity").SetAlias("-v").SetHelp("specifies the verbosity").SetValues("terse", "quiet", "silent", "chatty")
 
-	is_debug			:=	false
-	verbosity			:=	""
+	is_debug := false
+	verbosity := ""
 
-	climate, err := libclimate.Init(func (cl *libclimate.Climate) (err error) {
+	climate, err := libclimate.Init(func(cl *libclimate.Climate) (err error) {
 
-		cl.AddFlagFunc(flag_Debug, func() { is_debug = true })
-		cl.AddOptionFunc(option_Verbosity, func (o *clasp.Argument, a *clasp.Alias) {
+		cl.AddFlagFunc(flag_Debug, func() {
+
+			is_debug = true
+		})
+		cl.AddOptionFunc(option_Verbosity, func(o *clasp.Argument, a *clasp.Specification) {
 
 			verbosity = o.Value
 		})
 		cl.AddAlias("--verbosity=chatty", "-c")
 
-		cl.Version = "0.0.1"
+		cl.Version = "0.0.2"
 
-		cl.InfoLines = []string { "libCLImate.Go Examples", "", ":version:", "" }
+		cl.InfoLines = []string{
+			"libCLImate.Go Examples",
+			"",
+			":version:",
+			"",
+		}
 
 		return nil
-	});
+	})
 	if err != nil {
 
 		fmt.Fprintf(os.Stderr, "failed to create CLI parser: %v\n", err)
 	}
 
 	_, _ = climate.ParseAndVerify(os.Args, libclimate.ParseFlag_PanicOnFailure)
-
 
 	// Program-specific processing of flags/options
 
@@ -64,7 +71,6 @@ func main() {
 		fmt.Printf("Debug mode is specified\n")
 	}
 
-
 	// Finish normal processing
 
 	return
@@ -77,8 +83,8 @@ func main() {
 
 If executed with no arguments
 
-```
-    go run examples/parse_and_verify.go
+```bash
+go run examples/parse_and_verify.go
 ```
 
 it gives the output:
@@ -90,8 +96,8 @@ it gives the output:
 
 If executed with the arguments
 
-```
-    go run examples/parse_and_verify.go --help
+```bash
+go run examples/parse_and_verify.go --help
 ```
 
 it gives the output:
@@ -132,8 +138,8 @@ flags/options:
 
 If executed with the arguments
 
-```
-    go run examples/parse_and_verify.go --debug --verbosity=silent
+```bash
+go run examples/parse_and_verify.go --debug --verbosity=silent
 ```
 
 it gives the output:
@@ -147,8 +153,8 @@ Debug mode is specified
 
 If executed with the arguments
 
-```
-    go run examples/parse_and_verify.go -v silent -d
+```bash
+go run examples/parse_and_verify.go -v silent -d
 ```
 
 it gives the (same) output:
@@ -162,8 +168,8 @@ Debug mode is specified
 
 If executed with the arguments
 
-```
-    go run examples/parse_and_verify.go -c -d
+```bash
+go run examples/parse_and_verify.go -c -d
 ```
 
 it gives the output:
@@ -177,8 +183,8 @@ Debug mode is specified
 
 If executed with the arguments
 
-```
-    go run examples/parse_and_verify.go -dc
+```bash
+go run examples/parse_and_verify.go -dc
 ```
 
 it gives the (same) output:
@@ -187,3 +193,7 @@ it gives the (same) output:
 verbosity is specified as: chatty
 Debug mode is specified
 ```
+
+
+<!-- ########################### end of file ########################### -->
+

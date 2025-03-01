@@ -20,23 +20,27 @@ import (
 
 func main() {
 
-	// Specify aliases, parse, and checking standard flags
+	// Specify specifications, parse, and checking standard flags
 
-	climate, err := libclimate.Init(func (cl *libclimate.Climate) (err error) {
+	climate, err := libclimate.Init(func(cl *libclimate.Climate) (err error) {
 
 		cl.Version = "0.0.1"
 
-		cl.InfoLines = []string { "libCLImate.Go Examples", "", ":version:", "" }
+		cl.InfoLines = []string{
+			"libCLImate.Go Examples",
+			"",
+			":version:",
+			"",
+		}
 
 		return nil
-	});
+	})
 	if err != nil {
 
 		fmt.Fprintf(os.Stderr, "failed to create CLI parser: %v\n", err)
 	}
 
 	_, _ = climate.ParseAndVerify(os.Args, libclimate.ParseFlag_PanicOnFailure)
-
 
 	// Finish normal processing
 
@@ -50,8 +54,8 @@ func main() {
 
 If executed with no arguments
 
-```
-    go run examples/show_usage_and_version.go
+```bash
+go run examples/show_usage_and_version.go
 ```
 
 it gives the output:
@@ -64,8 +68,8 @@ no flags specified
 
 If executed with the arguments
 
-```
-    go run examples/show_usage_and_version.go --help
+```bash
+go run examples/show_usage_and_version.go --help
 ```
 
 it gives the output:
@@ -90,8 +94,8 @@ flags/options:
 
 If executed with the arguments
 
-```
-    go run examples/show_usage_and_version.go --version
+```bash
+go run examples/show_usage_and_version.go --version
 ```
 
 it gives the output:
@@ -104,8 +108,8 @@ show_usage_and_version 0.0.1
 
 If executed with the arguments
 
-```
-    go run examples/show_usage_and_version.go --unknown=value
+```bash
+go run examples/show_usage_and_version.go --unknown=value
 ```
 
 it gives the output (on the standard error stream):
@@ -115,4 +119,7 @@ show_usage_and_version: unrecognised flag/option: --unknown=value
 ```
 
 with an exit code of 1
+
+
+<!-- ########################### end of file ########################### -->
 

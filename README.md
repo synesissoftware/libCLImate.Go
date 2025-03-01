@@ -1,5 +1,7 @@
-# libCLImate.Go
+# libCLImate.Go <!-- omit in toc -->
+
 **C**ommand-**L**ine **I**nterface boilerplate mini-framework, for Go
+
 
 ## Introduction
 
@@ -10,15 +12,24 @@ Interface boilerplate. The first
 There have been several implementations in other languages. **libCLImate.Go** is the
 **Go** version.
 
-## Table of Contents
 
-1. [Introduction](#introduction)
-2. [Installation](#installation)
-3. [Components](#components)
-4. [Examples](#examples)
-5. [Project Information](#project-information)
+## Table of Contents <!-- omit in toc -->
 
-## Introduction
+- [Introduction](#introduction)
+- [Background](#background)
+- [Installation](#installation)
+- [Components](#components)
+- [Examples](#examples)
+- [Project Information](#project-information)
+	- [Where to get help](#where-to-get-help)
+	- [Contribution guidelines](#contribution-guidelines)
+	- [Dependencies](#dependencies)
+		- [Development/Testing Dependencies](#developmenttesting-dependencies)
+	- [Related projects](#related-projects)
+	- [License](#license)
+
+
+## Background
 
 As described in the [**CLASP**](https://github.com/synesissoftware/CLASP) project, command-line arguments may be discriminated as **flags**, **options**, and **values**:
 
@@ -36,12 +47,27 @@ As described in the [**CLASP**](https://github.com/synesissoftware/CLASP) projec
 
 **libCLImate.Go**, which is built from [**CLASP.Go**](https://github.com/synesissoftware/CLASP.Go), provides access to an instance of ``Climate`` (a **Go** ``struct``) via the ``Init()`` function's callback function argument, as illustrated in brief in the [Components](#components) section below and extensively in the [EXAMPLES.md](./EXAMPLES.md).
 
+
 ## Installation
 
-```Go
+Install via `go get`, as in:
 
+```bash
+go get "github.com/synesissoftware/libCLImate.Go"
+```
+
+and then import as:
+
+```Go
 import libclimate "github.com/synesissoftware/libCLImate.Go"
 ```
+
+or, simply, as:
+
+```Go
+import "github.com/synesissoftware/libCLImate.Go"
+```
+
 
 ## Components
 
@@ -69,18 +95,23 @@ func main() {
 }
 ```
 
-Inside "constructor" - at ``specify features HERE`` - the various features of the Climate instance under construction can be specified, including:
+Inside "constructor" - at ``specify features HERE`` - the various features of the `Climate` instance under construction can be specified, including:
 
 * the **version** as a string or an array (of numbers or strings), as in:
 
 ```Go
-        cl.Version = "0.0.1"
+	cl.Version = "0.0.1"
 ```
 
 * the **info lines** as an array of strings (including special value ``":version:"``, which prints program name and version), as in:
 
 ```Go
-        cl.InfoLines = []string{ "Example program", "", ":version:", "", }
+	cl.InfoLines = []string{
+		"Example program",
+		"",
+		":version:",
+		"",
+	}
 ```
 
 Even with just those two attributes set, the program will now respond to ``--help`` and ``--version`` with useful output:
@@ -112,18 +143,17 @@ Specification of program-specific **flags**/**options** is straightforward, e.g.
 * a **flag** ``--debug``:
 
 ```Go
-        cl.AddFlag(clasp.Flag("--debug").SetHelp("runs in Debug mode").SetAlias("-d"))
+	cl.AddFlag(clasp.Flag("--debug").SetHelp("runs in Debug mode").SetAlias("-d"))
 ```
 
 * an **option** ``--verbosity``, with a callback function:
 
 ```Go
-        o_Verbosity := clasp.Option("--verbosity").SetHelp("specifies verbosity").SetAlias("-v").SetValues("terse", "quiet", "silent", "chatty")
+	o_Verbosity := clasp.Option("--verbosity").SetHelp("specifies verbosity").SetAlias("-v").SetValues("terse", "quiet", "silent", "chatty")
 
-        cl.AddOptionFunc(o_Verbosity, func (o *clasp.Argument, a *clasp.Alias) {
-
-			fmt.Printf("verbosity specified as: %v\n", o.Value)
-		})
+	cl.AddOptionFunc(o_Verbosity, func (o *clasp.Argument, a *clasp.Alias) {
+		fmt.Printf("verbosity specified as: %v\n", o.Value)
+	})
 ```
 
 Now the program will respond to the flag ``--help`` with:
@@ -163,25 +193,38 @@ And will respond to the option ``-v silent`` (which is equivalent to ``--verbosi
 verbosity specified as: silent
 ```
 
+
 ## Examples
 
 Examples are provided in the ```examples``` directory, along with a markdown description for each. A detailed list TOC of them is provided in [EXAMPLES.md](./EXAMPLES.md).
 
+
 ## Project Information
+
 
 ### Where to get help
 
 [GitHub Page](https://github.com/synesissoftware/libCLImate.Go "GitHub Page")
 
+
 ### Contribution guidelines
 
 Defect reports, feature requests, and pull requests are welcome on https://github.com/synesissoftware/libCLImate.Go.
+
 
 ### Dependencies
 
 **libCLImate.Go** depends on:
 
 * [**CLASP.Go**](https://github.com/synesissoftware/CLASP.Go/)
+* [**ver2go**](https://github.com/synesissoftware/ver2go/)
+
+
+#### Development/Testing Dependencies
+
+* [**testify**](github.com/stretchr/testify);
+* [**ANGoLS**](https://github.com/synesissoftware/ANGoLS/);
+
 
 ### Related projects
 
@@ -189,6 +232,11 @@ Defect reports, feature requests, and pull requests are welcome on https://githu
 * [**libCLImate.Python**](https://github.com/synesissoftware/libCLImate.Python/)
 * [**libCLImate.Ruby**](https://github.com/synesissoftware/libCLImate.Ruby/)
 
+
 ### License
 
 **libCLImate.Go** is released under the 3-clause BSD license. See [LICENSE](./LICENSE) for details.
+
+
+<!-- ########################### end of file ########################### -->
+
