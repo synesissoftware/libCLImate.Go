@@ -41,13 +41,15 @@ func (de *default_exiter) Exit(exitCode int) {
 
 // Structure representing a CLI parsing context, obtained from [Init].
 type Climate struct {
-	Specifications []*clasp.Specification // The specifications created by [Init].
-	ParseFlags     clasp.ParseFlag        // T.B.C.
-	Version        interface{}            // Version field that can be specified by application code in the function called by [Init].
-	VersionPrefix  string                 // Version-prefix field that can be specified by application code in the function called by [Init].
-	InfoLines      []string               // Information lines field that can be specified by application code in the function called by [Init].
-	ValuesString   string                 // Values-string field that can be specified by application code in the function called by [Init].
-	ProgramName    string                 // Program-name field that can be specified by application code in the function called by [Init]. Defaults to `os.Args[0]`.
+	Specifications   []*clasp.Specification // The specifications created by [Init].
+	ParseFlags       clasp.ParseFlag        // T.B.C.
+	Version          interface{}            // Version field that can be specified by application code in the function called by [Init].
+	VersionPrefix    string                 // Version-prefix field that can be specified by application code in the function called by [Init].
+	InfoLines        []string               // Information lines field that can be specified by application code in the function called by [Init].
+	ValuesString     string                 // Values-string field that can be specified by application code in the function called by [Init].
+	ProgramName      string                 // Program-name field that can be specified by application code in the function called by [Init]. Defaults to `os.Args[0]`.
+	ValueNames       []string               // T.B.C.
+	ValuesConstraint []int                  // T.B.C.
 
 	initFlags InitFlag
 	stream    io.Writer
@@ -62,10 +64,12 @@ type Result struct {
 	ProgramName string            // The program name inferred by [Init], which may be overridden in the function called by [Init].
 	Argv        []string          // The original argument string array passed to [Parse].
 
-	arguments  *clasp.Arguments
-	parseFlags ParseFlag
-	stream     io.Writer
-	exiter     exiter
+	arguments        *clasp.Arguments
+	parseFlags       ParseFlag
+	stream           io.Writer
+	exiter           exiter
+	valueNames       []string
+	valuesConstraint []int
 }
 
 // Callback function for specification of Climate via DSL.
@@ -313,6 +317,16 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 
 		stream, err = parse_Stream_from_options_(options...)
 	}
+	if err == nil && stream == nil {
+
+		if cl.stream != nil {
+
+			stream = cl.stream
+		} else {
+
+			stream = os.Stderr
+		}
+	}
 
 	if err == nil {
 
@@ -424,14 +438,72 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 			ProgramName: arguments.ProgramName,
 			Argv:        argv,
 
-			arguments:  arguments,
-			parseFlags: parseFlags,
-			stream:     stream,
-			exiter:     exiter,
+			arguments:        arguments,
+			parseFlags:       parseFlags,
+			stream:           stream,
+			exiter:           exiter,
+			valueNames:       cl.ValueNames,
+			valuesConstraint: cl.ValuesConstraint,
 		}
 	}
 
 	return
+}
+
+func (result Result) validateValues1(stream io.Writer, constraint int) {
+
+	n := len(result.Values)
+
+	if constraint < 0 {
+		// do not validate
+	} else {
+		if constraint < n {
+			fmt.Fprintf(result.stream, "%s: too many values\n", result.ProgramName)
+
+			result.exiter.Exit(1)
+		}
+		if constraint > n {
+			var value_name string
+			if n < len(result.valueNames) {
+				value_name = result.valueNames[n]
+			} else {
+				value_name = fmt.Sprintf("value-%d", n)
+			}
+
+			fmt.Fprintf(result.stream, "%s: %s not specified\n", result.ProgramName, value_name)
+
+			result.exiter.Exit(1)
+		}
+	}
+}
+
+func (result Result) validateValues2(stream io.Writer, min, max int) {
+
+	if min == max {
+		result.validateValues1(stream, min)
+	} else {
+
+		n := len(result.Values)
+
+		if max > 0 && max < n {
+			fmt.Fprintf(result.stream, "%s: too many values\n", result.ProgramName)
+
+			result.exiter.Exit(1)
+		}
+
+		if min > 0 && min > n {
+			var value_name string
+			if n < len(result.valueNames) {
+				value_name = result.valueNames[n]
+			} else {
+				value_name = fmt.Sprintf("value-%d", n)
+			}
+
+			fmt.Fprintf(result.stream, "%s: %s not specified\n", result.ProgramName, value_name)
+
+			result.exiter.Exit(1)
+		}
+	}
 }
 
 // Verifies that all given arguments received are recognised according to
@@ -442,6 +514,10 @@ func (result Result) Verify(options ...interface{}) {
 	var parseFlags ParseFlag
 
 	stream, _ := parse_Stream_from_options_(options...)
+	if stream == nil {
+
+		stream = result.stream
+	}
 	if stream == nil {
 
 		stream = os.Stderr
@@ -463,6 +539,15 @@ func (result Result) Verify(options ...interface{}) {
 
 			result.exiter.Exit(1)
 		}
+	}
+
+	switch len(result.valuesConstraint) {
+	case 0:
+		// do not validate
+	case 1:
+		result.validateValues1(stream, result.valuesConstraint[0])
+	default:
+		result.validateValues2(stream, result.valuesConstraint[0], result.valuesConstraint[1])
 	}
 }
 
@@ -492,6 +577,10 @@ func (cl Climate) Abort(message string, err error, options ...interface{}) {
 	var exiter exiter
 
 	stream, _ := parse_Stream_from_options_(options...)
+	if stream == nil {
+
+		stream = cl.stream
+	}
 	if stream == nil {
 
 		stream = os.Stderr
