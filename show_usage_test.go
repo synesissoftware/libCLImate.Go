@@ -4,6 +4,7 @@ import (
 	angols_slices "github.com/synesissoftware/ANGoLS/slices"
 	clasp "github.com/synesissoftware/CLASP.Go"
 	libclimate "github.com/synesissoftware/libCLImate.Go"
+	"github.com/synesissoftware/libCLImate.Go/internal"
 
 	"bytes"
 	"fmt"
@@ -38,7 +39,7 @@ func Test_ShowUsage_1(t *testing.T) {
 		fmt.Fprintf(os.Stderr, "failed to create CLI parser: %v\n", err)
 	}
 
-	_, _ = climate.ParseAndVerify(argv, stm, stub_exiter{})
+	_, _ = climate.ParseAndVerify(argv, stm, internal.StubExiter{})
 
 	actual := strings.Split(stm.String(), "\n")
 	expected := []string{
@@ -88,7 +89,7 @@ func Test_ShowUsage_2(t *testing.T) {
 		fmt.Fprintf(os.Stderr, "failed to create CLI parser: %v\n", err)
 	}
 
-	_, _ = climate.ParseAndVerify(argv, stm, stub_exiter{})
+	_, _ = climate.ParseAndVerify(argv, stm, internal.StubExiter{})
 
 	actual := strings.Split(stm.String(), "\n")
 	expected := []string{
@@ -146,7 +147,7 @@ func Test_ShowUsage_3(t *testing.T) {
 		fmt.Fprintf(os.Stderr, "failed to create CLI parser: %v\n", err)
 	}
 
-	_, _ = climate.ParseAndVerify(argv, stm, stub_exiter{})
+	_, _ = climate.ParseAndVerify(argv, stm, internal.StubExiter{})
 
 	actual := strings.Split(stm.String(), "\n")
 	expected := []string{
@@ -211,7 +212,7 @@ func Test_ShowUsage_3_NoHelpFlag(t *testing.T) {
 		fmt.Fprintf(os.Stderr, "failed to create CLI parser: %v\n", err)
 	}
 
-	_, _ = climate.ParseAndVerify(argv, stm, stub_exiter{})
+	_, _ = climate.ParseAndVerify(argv, stm, internal.StubExiter{})
 
 	actual := stm.String()
 	expected := "myapp: unrecognised flag/option: --help\n"
@@ -251,7 +252,7 @@ func Test_ShowUsage_3_NoHelpFlag_AND_DontCheckUnused(t *testing.T) {
 		fmt.Fprintf(os.Stderr, "failed to create CLI parser: %v\n", err)
 	}
 
-	_, _ = climate.ParseAndVerify(argv, stm, stub_exiter{}, libclimate.ParseFlag_DontCheckUnused)
+	_, _ = climate.ParseAndVerify(argv, stm, internal.StubExiter{}, libclimate.ParseFlag_DontCheckUnused)
 
 	actual := stm.String()
 	expected := ""
@@ -291,7 +292,7 @@ func Test_ShowUsage_3_NoVersionFlag(t *testing.T) {
 		fmt.Fprintf(os.Stderr, "failed to create CLI parser: %v\n", err)
 	}
 
-	_, _ = climate.ParseAndVerify(argv, stm, stub_exiter{})
+	_, _ = climate.ParseAndVerify(argv, stm, internal.StubExiter{})
 
 	actual := strings.Split(stm.String(), "\n")
 	expected := []string{
