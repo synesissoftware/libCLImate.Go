@@ -31,14 +31,14 @@ type AliasFlag int64
 // Structure representing a CLI parsing context, obtained from [Init].
 type Climate struct {
 	Specifications   []*clasp.Specification // The specifications created by [Init].
-	ParseFlags       clasp.ParseFlag        // T.B.C.
+	ParseFlags       clasp.ParseFlag        // Parsing flags.
 	Version          interface{}            // Version field that can be specified by application code in the function called by [Init].
 	VersionPrefix    string                 // Version-prefix field that can be specified by application code in the function called by [Init].
 	InfoLines        []string               // Information lines field that can be specified by application code in the function called by [Init].
 	ValuesString     string                 // Values-string field that can be specified by application code in the function called by [Init].
 	ProgramName      string                 // Program-name field that can be specified by application code in the function called by [Init]. Defaults to `os.Args[0]`.
-	ValueNames       []string               // T.B.C.
-	ValuesConstraint []int                  // T.B.C.
+	ValueNames       []string               // Specifies a list of value names that may be used in a contingent report when insufficient values are specified on the command-line (as determined by [Climate.ValuesConstraint]).
+	ValuesConstraint []int                  // An array of 1 or 2 numbers that specify the number of values, or the minimum and maximum number of values, required. A value of -1 means "no constraint", so, for example, the constraint `{2, -1}` means 2+ values are required.
 
 	initFlags InitFlag
 	stream    io.Writer
@@ -217,7 +217,10 @@ func Init(initFn InitFunc, options ...interface{}) (climate *Climate, err error)
 			//Version:
 			//VersionPrefix:
 			//InfoLines:
+			// ValuesString:
 			ProgramName: program_name,
+			// ValueNames:
+			// ValuesConstraint:
 
 			initFlags: initFlags,
 			stream:    stream,
