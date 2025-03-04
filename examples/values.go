@@ -24,9 +24,9 @@ func main() {
 			"",
 		}
 
-		cl.ValuesString = "<country-name> <state-name> [ <town-name> [ <district-name> ]]"
-		cl.ValueNames = []string{"country name", "state name", "town name", "district name"}
+		cl.ValueNames = []string{"country name", "state id", "city name", "district id"}
 		cl.ValuesConstraint = []int{2, 4}
+		cl.ValuesString = "<country-name> <state-id> [ <city-name> [ <district-id> ]]"
 
 		return nil
 	}, libclimate.InitFlag_PanicOnFailure)

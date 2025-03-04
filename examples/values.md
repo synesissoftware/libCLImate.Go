@@ -8,6 +8,48 @@ Illustrates the handling of `Values`.
 ## Source
 
 ```Go
+// examples/values.go
+
+package main
+
+import (
+	libclimate "github.com/synesissoftware/libCLImate.Go"
+
+	"fmt"
+	"os"
+)
+
+func main() {
+
+	// Specify specifications, parse, and checking standard flags
+
+	climate, _ := libclimate.Init(func(cl *libclimate.Climate) (err error) {
+
+		cl.Version = []int{0, 0, 1}
+
+		cl.InfoLines = []string{
+			"libCLImate.Go Examples",
+			"",
+			":version:",
+			"",
+		}
+
+		cl.ValueNames = []string{"country name", "state id", "city name", "district id"}
+		cl.ValuesConstraint = []int{2, 4}
+		cl.ValuesString = "<country-name> <state-id> [ <city-name> [ <district-id> ]]"
+
+		return nil
+	}, libclimate.InitFlag_PanicOnFailure)
+
+	r, _ := climate.ParseAndVerify(os.Args, libclimate.ParseFlag_PanicOnFailure)
+
+	// Program logic
+
+	fmt.Printf("%v value(s):\n", len(r.Values))
+	for ix, value := range r.Values {
+		fmt.Printf("\t[%d]\t'%s'\n", ix, value.Value)
+	}
+}
 ```
 
 
@@ -25,6 +67,7 @@ go run examples/values.go
 it gives the output:
 
 ```
+values: country name not specified
 ```
 
 
@@ -39,69 +82,103 @@ go run examples/values.go --help
 it gives the output:
 
 ```
+libCLImate.Go Examples
+
+values 0.0.1
+
+USAGE: values [ ... flags and options ... ] <country-name> <state-name> [ <city-name> [ <district-id> ]]
+
+flags/options:
+
+	--help
+		Shows this help and exits
+
+	--version
+		Shows version information and exits
 ```
 
 
-### Specify flags and options in long-form
+### Specify one value
 
 If executed with the arguments
 
 ```bash
+go run examples/values.go England
 ```
 
 it gives the output:
 
 ```
-verbosity is specified as: silent
-Debug mode is specified
+values: state id not specified
 ```
 
 
-### Specify flags and options in short-form
+### Specify two values
 
 If executed with the arguments
 
 ```bash
-go run examples/values.go -v silent -d
-```
-
-it gives the (same) output:
-
-```
-verbosity is specified as: silent
-Debug mode is specified
-```
-
-
-### Specify flags and options in short-form, including an alias for an option-with-value
-
-If executed with the arguments
-
-```bash
-go run examples/values.go -c -d
+go run examples/values.go England Worcestershire
 ```
 
 it gives the output:
 
 ```
-verbosity is specified as: chatty
-Debug mode is specified
+2 value(s):
+	[0]	'England'
+	[1]	'Worcestershire'
 ```
 
 
-### Specify flags and options with combined short-form
+### Specify three values
 
 If executed with the arguments
 
 ```bash
-go run examples/values.go -dc
+go run examples/values.go England Worcestershire Evesham
 ```
 
-it gives the (same) output:
+it gives the output:
 
 ```
-verbosity is specified as: chatty
-Debug mode is specified
+3 value(s):
+	[0]	'England'
+	[1]	'Worcestershire'
+	[2]	'Evesham'
+```
+
+
+### Specify four values
+
+If executed with the arguments
+
+```bash
+go run examples/values.go England Worcestershire Evesham Bengeworth
+```
+
+it gives the output:
+
+```
+4 value(s):
+	[0]	'England'
+	[1]	'Worcestershire'
+	[2]	'Evesham'
+	[3]	'Bengeworth'
+```
+
+
+### Specify five values
+
+If executed with the arguments
+
+```bash
+go run examples/values.go England Worcestershire Evesham Bengeworth Badsley
+```
+
+it gives the output:
+
+```
+values: too many values
 ```
 
 

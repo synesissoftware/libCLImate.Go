@@ -1,6 +1,11 @@
 # **libCLImate.Go** Changes
 
 
+## 0.8.0-alpha1 - 4th March 2025
+
+* + added values-constraints, specified by the `Climate` fields `ValuesConstraint` and `ValueNames`;
+
+
 ## 0.7.0-alpha3 - 4th March 2025
 
 * ~ moved a bunch of elements to `internal`;
