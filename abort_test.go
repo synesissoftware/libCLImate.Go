@@ -2,6 +2,7 @@ package libclimate_test
 
 import (
 	libclimate "github.com/synesissoftware/libCLImate.Go"
+	"github.com/synesissoftware/libCLImate.Go/internal"
 
 	"bytes"
 	"errors"
@@ -17,7 +18,7 @@ func Test_Abort_1(t *testing.T) {
 	})
 
 	stm := new(bytes.Buffer)
-	exiter := new(capture_exiter)
+	exiter := new(internal.CaptureExiter)
 
 	msg := "Some-failure-condition"
 	err := errors.New("SOME-FAILURE-REASON")
@@ -42,7 +43,7 @@ func Test_Abort_2(t *testing.T) {
 	})
 
 	stm := new(bytes.Buffer)
-	exiter := new(capture_exiter)
+	exiter := new(internal.CaptureExiter)
 
 	msg := "Some-failure-condition"
 
