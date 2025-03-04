@@ -1,6 +1,11 @@
 # **libCLImate.Go** Changes
 
 
+## 0.7.0-alpha3 - 4th March 2025
+
+* ~ moved a bunch of elements to `internal`;
+
+
 ## 0.7.0-alpha2 - 28th February 2025
 
 * ~ fixed use of **ANGoLS**' `slices` package;

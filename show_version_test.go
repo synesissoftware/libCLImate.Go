@@ -2,6 +2,7 @@ package libclimate_test
 
 import (
 	libclimate "github.com/synesissoftware/libCLImate.Go"
+	"github.com/synesissoftware/libCLImate.Go/internal"
 
 	"bytes"
 	"fmt"
@@ -25,7 +26,7 @@ func Test_ShowVersion_1(t *testing.T) {
 		fmt.Fprintf(os.Stderr, "failed to create CLI parser: %v\n", err)
 	}
 
-	_, _ = climate.ParseAndVerify(argv, stm, stub_exiter{})
+	_, _ = climate.ParseAndVerify(argv, stm, internal.StubExiter{})
 
 	actual := stm.String()
 	expected := "myapp 0.0.1\n"
@@ -53,7 +54,7 @@ func Test_ShowVersion_2(t *testing.T) {
 		fmt.Fprintf(os.Stderr, "failed to create CLI parser: %v\n", err)
 	}
 
-	_, _ = climate.ParseAndVerify(argv, stm, stub_exiter{})
+	_, _ = climate.ParseAndVerify(argv, stm, internal.StubExiter{})
 
 	actual := stm.String()
 	expected := "myapp v0.1.2\n"
@@ -81,7 +82,7 @@ func Test_ShowVersion_2_NoVersionFlag(t *testing.T) {
 		fmt.Fprintf(os.Stderr, "failed to create CLI parser: %v\n", err)
 	}
 
-	_, _ = climate.ParseAndVerify(argv, stm, stub_exiter{})
+	_, _ = climate.ParseAndVerify(argv, stm, internal.StubExiter{})
 
 	actual := stm.String()
 	expected := "myapp: unrecognised flag/option: --version\n"

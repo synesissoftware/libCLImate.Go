@@ -4,13 +4,14 @@
 
 /*
  * Created: 22nd March 2019
- * Updated: 1st March 2025
+ * Updated: 4th March 2025
  */
 
 package libclimate
 
 import (
 	clasp "github.com/synesissoftware/CLASP.Go"
+	"github.com/synesissoftware/libCLImate.Go/internal"
 
 	"fmt"
 	"io"
@@ -27,18 +28,6 @@ type ParseFlag int64
 // Type of flags passed to the [Climate.AddFlag] and [Climate.AddOption] methods.
 type AliasFlag int64
 
-type exiter interface {
-	Exit(exitCode int)
-}
-
-type default_exiter struct {
-}
-
-func (de *default_exiter) Exit(exitCode int) {
-
-	os.Exit(exitCode)
-}
-
 // Structure representing a CLI parsing context, obtained from [Init].
 type Climate struct {
 	Specifications   []*clasp.Specification // The specifications created by [Init].
@@ -53,7 +42,7 @@ type Climate struct {
 
 	initFlags InitFlag
 	stream    io.Writer
-	exiter    exiter
+	exiter    internal.Exiter
 }
 
 // Structure representing CLI results, obtained from [Climate.Parse].
@@ -67,7 +56,7 @@ type Result struct {
 	arguments        *clasp.Arguments
 	parseFlags       ParseFlag
 	stream           io.Writer
-	exiter           exiter
+	exiter           internal.Exiter
 	valueNames       []string
 	valuesConstraint []int
 }
@@ -111,13 +100,13 @@ const (
  * helper functions
  */
 
-func parse_Exiter_from_options_(options ...interface{}) (result exiter, err error) {
+func parse_Exiter_from_options_(options ...interface{}) (result internal.Exiter, err error) {
 
 	for _, option := range options {
 
 		switch v := option.(type) {
 
-		case exiter:
+		case internal.Exiter:
 
 			return v, nil
 		}
@@ -193,7 +182,7 @@ func Init(initFn InitFunc, options ...interface{}) (climate *Climate, err error)
 
 	var initFlags InitFlag
 	var stream io.Writer
-	var exiter exiter
+	var exiter internal.Exiter
 
 	if err == nil {
 
@@ -211,7 +200,7 @@ func Init(initFn InitFunc, options ...interface{}) (climate *Climate, err error)
 	}
 	if err == nil && exiter == nil {
 
-		exiter = new(default_exiter)
+		exiter = new(internal.DefaultExiter)
 	}
 
 	if err == nil {
@@ -305,7 +294,7 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 
 	var parseFlags ParseFlag
 	var stream io.Writer
-	var exiter exiter
+	var exiter internal.Exiter
 	var arguments *clasp.Arguments
 
 	if err == nil {
@@ -574,7 +563,7 @@ func (cl Climate) ParseAndVerify(argv []string, options ...interface{}) (result 
 // with a non-0 exit code.
 func (cl Climate) Abort(message string, err error, options ...interface{}) {
 
-	var exiter exiter
+	var exiter internal.Exiter
 
 	stream, _ := parse_Stream_from_options_(options...)
 	if stream == nil {
