@@ -55,3 +55,72 @@ func Test_Abort_2(t *testing.T) {
 
 	require.Equal(t, expected, actual)
 }
+
+func Test_Abort_WITH_UsageHelpSuffix_1(t *testing.T) {
+
+	climate, _ := libclimate.Init(func(cl *libclimate.Climate) (err error) {
+
+		cl.ProgramName = "myapp"
+		cl.UsageHelpSuffix = "specify --help for usage"
+
+		return nil
+	}, libclimate.InitFlag_PanicOnFailure)
+
+	stm := new(bytes.Buffer)
+	exiter := new(internal.CaptureExiter)
+
+	msg := "Some-failure-condition"
+
+	climate.Abort(msg, nil, stm, exiter)
+
+	actual := stm.String()
+	expected := fmt.Sprintf("myapp: %s; specify --help for usage\n", msg)
+
+	require.Equal(t, expected, actual)
+}
+
+func Test_Abort_WITH_UsageHelpSuffix_2(t *testing.T) {
+
+	climate, _ := libclimate.Init(func(cl *libclimate.Climate) (err error) {
+
+		cl.ProgramName = "myapp"
+		cl.UsageHelpSuffix = ":"
+
+		return nil
+	}, libclimate.InitFlag_PanicOnFailure)
+
+	stm := new(bytes.Buffer)
+	exiter := new(internal.CaptureExiter)
+
+	msg := "Some-failure-condition"
+
+	climate.Abort(msg, nil, stm, exiter)
+
+	actual := stm.String()
+	expected := fmt.Sprintf("myapp: %s; use --help for usage\n", msg)
+
+	require.Equal(t, expected, actual)
+}
+
+func Test_Abort_WITH_UsageHelpSuffix_3(t *testing.T) {
+
+	climate, _ := libclimate.Init(func(cl *libclimate.Climate) (err error) {
+
+		cl.ProgramName = "myapp"
+		cl.UsageHelpSuffix = ", specify --help for usage"
+
+		return nil
+	}, libclimate.InitFlag_PanicOnFailure)
+
+	stm := new(bytes.Buffer)
+	exiter := new(internal.CaptureExiter)
+
+	msg := "Some-failure-condition"
+
+	climate.Abort(msg, nil, stm, exiter)
+
+	actual := stm.String()
+	expected := fmt.Sprintf("myapp: %s, specify --help for usage\n", msg)
+
+	require.Equal(t, expected, actual)
+}
