@@ -7,4 +7,3 @@ func main() {
 
 	fmt.Printf("libCLImate.Go v%s\n", libclimate.VersionString())
 }
-
