@@ -1,6 +1,11 @@
 # **libCLImate.Go** Changes
 
 
+## 0.8.0-beta-1 - 4th March 2025
+
+* + added `UsageHelpSuffix`;
+
+
 ## 0.8.0-alpha1 - 4th March 2025
 
 * + added values-constraints, specified by the `Climate` fields `ValuesConstraint` and `ValueNames`;
