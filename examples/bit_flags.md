@@ -48,6 +48,8 @@ func main() {
 			"",
 		}
 
+		cl.UsageHelpSuffix = "" // suppresses the default
+
 		return nil
 	}, libclimate.InitFlag_PanicOnFailure)
 

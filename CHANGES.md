@@ -1,6 +1,11 @@
 # **libCLImate.Go** Changes
 
 
+## 0.8.1 - 12th March 2025
+
+* + further application of `UsageHelpSuffix` to various contingent reports, and now operative by default;
+
+
 ## 0.8.0-beta-1 - 4th March 2025
 
 * + added `UsageHelpSuffix`;

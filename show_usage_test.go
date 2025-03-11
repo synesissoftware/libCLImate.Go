@@ -200,6 +200,8 @@ func Test_ShowUsage_3_NoHelpFlag(t *testing.T) {
 		}
 		cl.ValuesString = "<path-1> <path-2>"
 
+		cl.UsageHelpSuffix = ""
+
 		cl.AddFlag(clasp.Option("--verbosity").
 			SetHelp("Specifies the verbosity").
 			SetValues("low", "medium", "high"))
