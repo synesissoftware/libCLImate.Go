@@ -4,7 +4,7 @@
 
 /*
  * Created: 22nd March 2019
- * Updated: 4th March 2025
+ * Updated: 7th March 2025
  */
 
 package libclimate
@@ -17,6 +17,7 @@ import (
 	"io"
 	"os"
 	"path"
+	"unicode"
 )
 
 // Type of flags passed to the [Init] method.
@@ -39,6 +40,7 @@ type Climate struct {
 	ProgramName      string                 // Program-name field that can be specified by application code in the function called by [Init]. Defaults to `os.Args[0]`.
 	ValueNames       []string               // Specifies a list of value names that may be used in a contingent report when insufficient values are specified on the command-line (as determined by [Climate.ValuesConstraint]).
 	ValuesConstraint []int                  // An array of 1 or 2 numbers that specify the number of values, or the minimum and maximum number of values, required. A value of -1 means "no constraint", so, for example, the constraint `{2, -1}` means 2+ values are required.
+	UsageHelpSuffix  string                 // An optional string to be applied to the end of the contingent report produced by [Climate.Abort]. Defaults to nothing. Specify ":" for default suffix string of "; use --help for usage". Insert leading "; " unless first character is punctuation.
 
 	initFlags InitFlag
 	stream    io.Writer
@@ -94,6 +96,10 @@ const (
 const (
 	_libCLImate_FlagFunc   = "_libCLImate_FlagFunc_F73BB1C0_92D7_4cd5_9C36_DB672290CBE7"
 	_libCLImate_OptionFunc = "_libCLImate_OptionFunc_F73BB1C0_92D7_4cd5_9C36_DB672290CBE7"
+)
+
+const (
+	UsageHelpSuffix_Default = "; use --help for usage"
 )
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -584,12 +590,34 @@ func (cl Climate) Abort(message string, err error, options ...interface{}) {
 		exiter = cl.exiter
 	}
 
+	var suffix string
+	switch cl.UsageHelpSuffix {
+	default:
+		var first rune
+		for _, c := range cl.UsageHelpSuffix {
+			first = c
+			break
+		}
+
+		if unicode.IsPunct(first) {
+			suffix = cl.UsageHelpSuffix
+		} else {
+			suffix = "; " + cl.UsageHelpSuffix
+		}
+
+	case ":":
+
+		suffix = UsageHelpSuffix_Default
+	case "":
+		// do nothing
+	}
+
 	if err != nil {
 
-		fmt.Fprintf(stream, "%s: %s: %v\n", cl.ProgramName, message, err)
+		fmt.Fprintf(stream, "%s: %s: %v%s\n", cl.ProgramName, message, err, suffix)
 	} else {
 
-		fmt.Fprintf(stream, "%s: %s\n", cl.ProgramName, message)
+		fmt.Fprintf(stream, "%s: %s%s\n", cl.ProgramName, message, suffix)
 	}
 
 	exiter.Exit(1)
