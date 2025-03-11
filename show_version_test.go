@@ -75,6 +75,8 @@ func Test_ShowVersion_2_NoVersionFlag(t *testing.T) {
 		cl.Version = []int{0, 1, 2}
 		cl.VersionPrefix = "v"
 
+		cl.UsageHelpSuffix = ""
+
 		return nil
 	}, libclimate.InitFlag_NoVersionFlag)
 	if err != nil {

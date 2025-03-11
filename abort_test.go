@@ -16,6 +16,7 @@ func Test_Abort_1(t *testing.T) {
 	climate, _ := libclimate.Init(func(cl *libclimate.Climate) (err error) {
 
 		cl.ProgramName = "myapp"
+		cl.UsageHelpSuffix = ""
 
 		return nil
 	}, libclimate.InitFlag_PanicOnFailure)
@@ -39,6 +40,7 @@ func Test_Abort_2(t *testing.T) {
 	climate, _ := libclimate.Init(func(cl *libclimate.Climate) (err error) {
 
 		cl.ProgramName = "myapp"
+		cl.UsageHelpSuffix = ""
 
 		return nil
 	}, libclimate.InitFlag_PanicOnFailure)
