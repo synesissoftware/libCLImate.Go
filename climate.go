@@ -61,6 +61,7 @@ type Result struct {
 	exiter           internal.Exiter
 	valueNames       []string
 	valuesConstraint []int
+	usageHelpSuffix  string
 }
 
 // Callback function for specification of Climate via DSL.
@@ -178,6 +179,32 @@ func pointer_specifications_to_value_specifications(input []*clasp.Specification
 	return
 }
 
+func uhs_(uhs string) string {
+
+	switch uhs {
+	default:
+		var first rune
+		for _, c := range uhs {
+			first = c
+			break
+		}
+
+		if unicode.IsPunct(first) {
+			return uhs
+		} else {
+			return "; " + uhs
+		}
+
+	case ":":
+
+		return UsageHelpSuffix_Default
+	case "":
+		// do nothing
+
+		return ""
+	}
+}
+
 /* /////////////////////////////////////////////////////////////////////////
  * API functions
  */
@@ -227,6 +254,7 @@ func Init(initFn InitFunc, options ...interface{}) (climate *Climate, err error)
 			ProgramName: program_name,
 			// ValueNames:
 			// ValuesConstraint:
+			UsageHelpSuffix: UsageHelpSuffix_Default,
 
 			initFlags: initFlags,
 			stream:    stream,
@@ -442,6 +470,7 @@ func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, e
 			exiter:           exiter,
 			valueNames:       cl.ValueNames,
 			valuesConstraint: cl.ValuesConstraint,
+			usageHelpSuffix:  cl.UsageHelpSuffix,
 		}
 	}
 
@@ -456,7 +485,7 @@ func (result Result) validateValues1(stream io.Writer, constraint int) {
 		// do not validate
 	} else {
 		if constraint < n {
-			fmt.Fprintf(result.stream, "%s: too many values\n", result.ProgramName)
+			fmt.Fprintf(result.stream, "%s: too many values%s\n", result.ProgramName, uhs_(result.usageHelpSuffix))
 
 			result.exiter.Exit(1)
 		}
@@ -468,7 +497,7 @@ func (result Result) validateValues1(stream io.Writer, constraint int) {
 				value_name = fmt.Sprintf("value-%d", n)
 			}
 
-			fmt.Fprintf(result.stream, "%s: %s not specified\n", result.ProgramName, value_name)
+			fmt.Fprintf(result.stream, "%s: %s not specified%s\n", result.ProgramName, value_name, uhs_(result.usageHelpSuffix))
 
 			result.exiter.Exit(1)
 		}
@@ -484,7 +513,7 @@ func (result Result) validateValues2(stream io.Writer, min, max int) {
 		n := len(result.Values)
 
 		if max > 0 && max < n {
-			fmt.Fprintf(result.stream, "%s: too many values\n", result.ProgramName)
+			fmt.Fprintf(result.stream, "%s: too many values%s\n", result.ProgramName, uhs_(result.usageHelpSuffix))
 
 			result.exiter.Exit(1)
 		}
@@ -497,7 +526,7 @@ func (result Result) validateValues2(stream io.Writer, min, max int) {
 				value_name = fmt.Sprintf("value-%d", n)
 			}
 
-			fmt.Fprintf(result.stream, "%s: %s not specified\n", result.ProgramName, value_name)
+			fmt.Fprintf(result.stream, "%s: %s not specified%s\n", result.ProgramName, value_name, uhs_(result.usageHelpSuffix))
 
 			result.exiter.Exit(1)
 		}
@@ -533,7 +562,7 @@ func (result Result) Verify(options ...interface{}) {
 
 		if unused := result.arguments.GetUnusedFlagsAndOptions(); 0 != len(unused) {
 
-			fmt.Fprintf(stream, "%s: unrecognised flag/option: %s\n", result.arguments.ProgramName, unused[0].Str())
+			fmt.Fprintf(stream, "%s: unrecognised flag/option: %s%s\n", result.arguments.ProgramName, unused[0].Str(), uhs_(result.usageHelpSuffix))
 
 			result.exiter.Exit(1)
 		}
@@ -590,34 +619,14 @@ func (cl Climate) Abort(message string, err error, options ...interface{}) {
 		exiter = cl.exiter
 	}
 
-	var suffix string
-	switch cl.UsageHelpSuffix {
-	default:
-		var first rune
-		for _, c := range cl.UsageHelpSuffix {
-			first = c
-			break
-		}
-
-		if unicode.IsPunct(first) {
-			suffix = cl.UsageHelpSuffix
-		} else {
-			suffix = "; " + cl.UsageHelpSuffix
-		}
-
-	case ":":
-
-		suffix = UsageHelpSuffix_Default
-	case "":
-		// do nothing
-	}
+	uhs := uhs_(cl.UsageHelpSuffix)
 
 	if err != nil {
 
-		fmt.Fprintf(stream, "%s: %s: %v%s\n", cl.ProgramName, message, err, suffix)
+		fmt.Fprintf(stream, "%s: %s: %v%s\n", cl.ProgramName, message, err, uhs)
 	} else {
 
-		fmt.Fprintf(stream, "%s: %s%s\n", cl.ProgramName, message, suffix)
+		fmt.Fprintf(stream, "%s: %s%s\n", cl.ProgramName, message, uhs)
 	}
 
 	exiter.Exit(1)
