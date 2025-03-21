@@ -1,5 +1,7 @@
 # libCLImate.Go <!-- omit in toc -->
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/synesissoftware/libCLImate.Go.svg)](https://pkg.go.dev/github.com/synesissoftware/libCLImate.Go)
+
 **C**ommand-**L**ine **I**nterface boilerplate mini-framework, for Go
 
 
