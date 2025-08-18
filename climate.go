@@ -4,7 +4,7 @@
 
 /*
  * Created: 22nd March 2019
- * Updated: 12th March 2025
+ * Updated: 18th August 2025
  */
 
 package libclimate
@@ -33,7 +33,7 @@ type AliasFlag int64
 type Climate struct {
 	Specifications   []*clasp.Specification // The specifications created by [Init].
 	ParseFlags       clasp.ParseFlag        // Parsing flags.
-	Version          interface{}            // Version field that can be specified by application code in the function called by [Init].
+	Version          any                    // Version field that can be specified by application code in the function called by [Init].
 	VersionPrefix    string                 // Version-prefix field that can be specified by application code in the function called by [Init].
 	InfoLines        []string               // Information lines field that can be specified by application code in the function called by [Init].
 	ValuesString     string                 // Values-string field that can be specified by application code in the function called by [Init].
@@ -107,7 +107,7 @@ const (
  * helper functions
  */
 
-func parse_Exiter_from_options_(options ...interface{}) (result internal.Exiter, err error) {
+func parse_Exiter_from_options_(options ...any) (result internal.Exiter, err error) {
 
 	for _, option := range options {
 
@@ -122,7 +122,7 @@ func parse_Exiter_from_options_(options ...interface{}) (result internal.Exiter,
 	return
 }
 
-func parse_Stream_from_options_(options ...interface{}) (result io.Writer, err error) {
+func parse_Stream_from_options_(options ...any) (result io.Writer, err error) {
 
 	for _, option := range options {
 
@@ -137,7 +137,7 @@ func parse_Stream_from_options_(options ...interface{}) (result io.Writer, err e
 	return
 }
 
-func parse_InitFlags_from_options_(options ...interface{}) (result InitFlag, err error) {
+func parse_InitFlags_from_options_(options ...any) (result InitFlag, err error) {
 
 	for _, option := range options {
 
@@ -152,7 +152,7 @@ func parse_InitFlags_from_options_(options ...interface{}) (result InitFlag, err
 	return
 }
 
-func parse_ParseFlags_from_options_(options ...interface{}) (result ParseFlag, err error) {
+func parse_ParseFlags_from_options_(options ...any) (result ParseFlag, err error) {
 
 	for _, option := range options {
 
@@ -211,7 +211,7 @@ func uhs_(uhs string) string {
 
 // Initialises a Climate instance, according to the given function (which
 // may not be nil) and arguments.
-func Init(initFn InitFunc, options ...interface{}) (climate *Climate, err error) {
+func Init(initFn InitFunc, options ...any) (climate *Climate, err error) {
 
 	var initFlags InitFlag
 	var stream io.Writer
@@ -327,7 +327,7 @@ func (cl *Climate) AddOptionFunc(option clasp.Specification, optionFn OptionFunc
 
 // Parses a command line, obtaining a Result instance representing the
 // arguments received by the process.
-func (cl Climate) Parse(argv []string, options ...interface{}) (result Result, err error) {
+func (cl Climate) Parse(argv []string, options ...any) (result Result, err error) {
 
 	var parseFlags ParseFlag
 	var stream io.Writer
@@ -535,7 +535,7 @@ func (result Result) validateValues2(stream io.Writer, min, max int) {
 
 // Verifies that all given arguments received are recognised according to
 // the specified flags and options
-func (result Result) Verify(options ...interface{}) {
+func (result Result) Verify(options ...any) {
 
 	var err error
 	var parseFlags ParseFlag
@@ -582,7 +582,7 @@ func (result Result) Verify(options ...interface{}) {
 //
 // Panics, rather than returns, if the ParseFlag_PanicOnFailure flag is
 // specified
-func (cl Climate) ParseAndVerify(argv []string, options ...interface{}) (result Result, err error) {
+func (cl Climate) ParseAndVerify(argv []string, options ...any) (result Result, err error) {
 
 	result, err = cl.Parse(argv, options...)
 	if err != nil {
@@ -599,7 +599,7 @@ func (cl Climate) ParseAndVerify(argv []string, options ...interface{}) (result 
 // Emits the given message and, optionally, err to the standard error
 // stream, prefixed with the program name, and then terminates the process
 // with a non-0 exit code.
-func (cl Climate) Abort(message string, err error, options ...interface{}) {
+func (cl Climate) Abort(message string, err error, options ...any) {
 
 	var exiter internal.Exiter
 
@@ -633,21 +633,21 @@ func (cl Climate) Abort(message string, err error, options ...interface{}) {
 }
 
 // Determines if the given flag is specified
-func (result Result) FlagIsSpecified(id interface{}) bool {
+func (result Result) FlagIsSpecified(id any) bool {
 
 	return result.arguments.FlagIsSpecified(id)
 }
 
 // Looks for a flag with the given id - name, or the specification instance - and
 // returns it and the value true if found; if not, returns nil and false.
-func (result Result) LookupFlag(id interface{}) (*clasp.Argument, bool) {
+func (result Result) LookupFlag(id any) (*clasp.Argument, bool) {
 
 	return result.arguments.LookupFlag(id)
 }
 
 // Looks for an option with the given id - name, or the specification instance - and
 // returns it and the value true if found; if not, returns nil and false.
-func (result Result) LookupOption(id interface{}) (*clasp.Argument, bool) {
+func (result Result) LookupOption(id any) (*clasp.Argument, bool) {
 
 	return result.arguments.LookupOption(id)
 }

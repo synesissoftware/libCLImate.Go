@@ -1,5 +1,10 @@
 # libCLImate.Go <!-- omit in toc -->
 
+[![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![GitHub release](https://img.shields.io/github/v/release/synesissoftware/libCLImate.Go.svg)](https://github.com/synesissoftware/libCLImate.Go/releases/latest)
+[![Last Commit](https://img.shields.io/github/last-commit/synesissoftware/libCLImate.Go)](https://github.com/synesissoftware/libCLImate.Go/commits/master)
+[![Go](https://github.com/synesissoftware/libCLImate.Go/actions/workflows/go.yml/badge.svg)](https://github.com/synesissoftware/libCLImate.Go/actions/workflows/go.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/synesissoftware/libCLImate.Go)](https://goreportcard.com/report/github.com/synesissoftware/libCLImate.Go)
 [![Go Reference](https://pkg.go.dev/badge/github.com/synesissoftware/libCLImate.Go.svg)](https://pkg.go.dev/github.com/synesissoftware/libCLImate.Go)
 
 **C**ommand-**L**ine **I**nterface boilerplate mini-framework, for Go

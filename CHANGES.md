@@ -1,6 +1,14 @@
 # **libCLImate.Go** Changes
 
 
+## 0.8.2-beta-1 - 18th August 2025
+
+* GitHub Actions;
+* `interface{}` => `any`;
+* boilerplate;
+* documentation;
+
+
 ## 0.8.1 - 12th March 2025
 
 * + further application of `UsageHelpSuffix` to various contingent reports, and now operative by default;
