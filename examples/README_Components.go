@@ -35,9 +35,8 @@ func main() {
 		return nil
 	}, libclimate.InitFlag_PanicOnFailure)
 
-	r, _ = climate.ParseAndVerify(os.Args, libclimate.ParseFlag_PanicOnFailure)
+	_, _ = climate.ParseAndVerify(os.Args, libclimate.ParseFlag_PanicOnFailure)
 
 	// rest of program
 
-	. . .
 }
