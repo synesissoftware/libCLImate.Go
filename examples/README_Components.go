@@ -12,7 +12,7 @@ import (
 
 func main() {
 
-	climate, err := libclimate.Init(func(cl *libclimate.Climate) error {
+	climate, _ := libclimate.Init(func(cl *libclimate.Climate) error {
 
 		// specify features HERE
 		cl.Version = "0.0.1"
@@ -33,13 +33,10 @@ func main() {
 		})
 
 		return nil
-	})
-	if err != nil {
-
-		fmt.Fprintf(os.Stderr, "failed to create CLI parser: %v\n", err)
-	}
+	}, libclimate.InitFlag_PanicOnFailure)
 
 	_, _ = climate.ParseAndVerify(os.Args, libclimate.ParseFlag_PanicOnFailure)
 
 	// rest of program
+
 }

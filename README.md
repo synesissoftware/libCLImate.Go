@@ -90,15 +90,11 @@ func main() {
         . . . // specify features HERE
 
 		return nil
-	});
-	if err != nil {
+	}, libclimate.InitFlag_PanicOnFailure)
 
-		fmt.Fprintf(os.Stderr, "failed to create CLI parser: %v\n", err)
-	}
+	r, _ = climate.ParseAndVerify(os.Args, libclimate.ParseFlag_PanicOnFailure)
 
-	_, _ = climate.ParseAndVerify(os.Args, libclimate.ParseFlag_PanicOnFailure)
-
-    . . . // rest of program
+	. . . // rest of program
 }
 ```
 
@@ -106,62 +102,62 @@ Inside "constructor" - at ``specify features HERE`` - the various features of th
 
 * the **version** as a string or an array (of numbers or strings), as in:
 
-```Go
-	cl.Version = "0.0.1"
-```
+	```Go
+		cl.Version = "0.0.1"
+	```
 
 * the **info lines** as an array of strings (including special value ``":version:"``, which prints program name and version), as in:
 
-```Go
-	cl.InfoLines = []string{
-		"Example program",
-		"",
-		":version:",
-		"",
-	}
-```
+	```Go
+		cl.InfoLines = []string{
+			"Example program",
+			"",
+			":version:",
+			"",
+		}
+	```
 
 Even with just those two attributes set, the program will now respond to ``--help`` and ``--version`` with useful output:
 
 * ``--help``
-```
-Example program
+	```
+	Example program
 
-README_Components 0.0.1
+	README_Components 0.0.1
 
-USAGE: README_Components [ ... flags and options ... ]
+	USAGE: README_Components [ ... flags and options ... ]
 
-flags/options:
+	flags/options:
 
-	--help
-		Shows this help and exits
+		--help
+			Shows this help and exits
 
-	--version
-		Shows version information and exits
-```
+		--version
+			Shows version information and exits
+	```
 
 * ``--version``
-```
-README_Components 0.0.1
-```
+	```
+	README_Components 0.0.1
+	```
 
 Specification of program-specific **flags**/**options** is straightforward, e.g.
 
 * a **flag** ``--debug``:
 
-```Go
-	cl.AddFlag(clasp.Flag("--debug").SetHelp("runs in Debug mode").SetAlias("-d"))
-```
+	```Go
+		cl.AddFlag(clasp.Flag("--debug").SetHelp("runs in Debug mode").SetAlias("-d"))
+	```
 
 * an **option** ``--verbosity``, with a callback function:
 
-```Go
-	o_Verbosity := clasp.Option("--verbosity").SetHelp("specifies verbosity").SetAlias("-v").SetValues("terse", "quiet", "silent", "chatty")
+	```Go
+		o_Verbosity := clasp.Option("--verbosity").SetHelp("specifies verbosity").SetAlias("-v").SetValues("terse", "quiet", "silent", "chatty")
 
-	cl.AddOptionFunc(o_Verbosity, func (o *clasp.Argument, a *clasp.Alias) {
-		fmt.Printf("verbosity specified as: %v\n", o.Value)
-	})
-```
+		cl.AddOptionFunc(o_Verbosity, func (o *clasp.Argument, a *clasp.Alias) {
+			fmt.Printf("verbosity specified as: %v\n", o.Value)
+		})
+	```
 
 Now the program will respond to the flag ``--help`` with:
 
@@ -203,7 +199,7 @@ verbosity specified as: silent
 
 ## Examples
 
-Examples are provided in the ```examples``` directory, along with a markdown description for each. A detailed list TOC of them is provided in [EXAMPLES.md](./EXAMPLES.md).
+Several examples are provided in the ```examples``` directory, along with a markdown description for each. A detailed list TOC of them is provided in [EXAMPLES.md](./EXAMPLES.md).
 
 
 ## Project Information
