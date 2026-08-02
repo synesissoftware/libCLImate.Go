@@ -1,4 +1,4 @@
-# **libCLImate.Go** TODO <!-- omit in toc -->
+# libCLImate.Go - TODO <!-- omit in toc -->
 
 
 ## **libCLImate.Go** 0.6.x TODOs:
