@@ -1,4 +1,4 @@
-# libCLImate.Go Examples
+# libCLImate.Go - Examples <!-- omit in toc -->
 
 |Name|Source & Description|Summary|
 |---|---|---|
