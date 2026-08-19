@@ -1,4 +1,4 @@
-# libCLImate.Go Example - **parse_and_verify**
+# libCLImate.Go - Example - **parse_and_verify**
 
 ## Summary
 

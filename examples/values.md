@@ -1,4 +1,4 @@
-# libCLImate.Go Example - **values**
+# libCLImate.Go - Example - **values**
 
 ## Summary
 

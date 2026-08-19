@@ -1,4 +1,4 @@
-# libCLImate.Go - CHANGES <!-- omit in toc -->
+# libCLImate.Go - Changes <!-- omit in toc -->
 
 
 ## 0.8.2-beta-1 - 18th August 2025

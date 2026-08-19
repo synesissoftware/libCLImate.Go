@@ -11,16 +11,6 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/synesissoftware/libCLImate.Go.svg)](https://pkg.go.dev/github.com/synesissoftware/libCLImate.Go)
 
 
-## Introduction
-
-**libCLImate** is a **C**ommand-**L**ine **I**nterface boilerplate
-mini-framework, which encapsulates the common aspects of Command-Line
-Interface boilerplate. The first
-[libCLImate was a C/C++ library](https://github.com/synesissoftware/libCLImate/).
-There have been several implementations in other languages. **libCLImate.Go** is the
-**Go** version.
-
-
 ## Table of Contents <!-- omit in toc -->
 
 - [Introduction](#introduction)
@@ -35,6 +25,16 @@ There have been several implementations in other languages. **libCLImate.Go** is
 		- [Development/Testing Dependencies](#developmenttesting-dependencies)
 	- [Related projects](#related-projects)
 	- [License](#license)
+
+
+## Introduction
+
+**libCLImate** is a **C**ommand-**L**ine **I**nterface boilerplate
+mini-framework, which encapsulates the common aspects of Command-Line
+Interface boilerplate. The first
+[libCLImate was a C/C++ library](https://github.com/synesissoftware/libCLImate/).
+There have been several implementations in other languages. **libCLImate.Go** is the
+**Go** version.
 
 
 ## Background

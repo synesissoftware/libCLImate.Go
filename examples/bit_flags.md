@@ -1,4 +1,4 @@
-# libCLImate.Go Example - **bit_flags**
+# libCLImate.Go - Example - **bit_flags**
 
 ## Summary
 
