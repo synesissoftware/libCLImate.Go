@@ -1,7 +1,7 @@
 # libCLImate.Go - Changes <!-- omit in toc -->
 
 
-## 0.8.2-beta-1 - 18th August 2025
+## 0.8.2-beta1 - 18th August 2025
 
 * GitHub Actions;
 * `interface{}` => `any`;
@@ -14,7 +14,7 @@
 * + further application of `UsageHelpSuffix` to various contingent reports, and now operative by default;
 
 
-## 0.8.0-beta-1 - 4th March 2025
+## 0.8.0-beta1 - 4th March 2025
 
 * + added `UsageHelpSuffix`;
 
