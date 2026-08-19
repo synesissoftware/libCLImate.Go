@@ -1,12 +1,12 @@
 module github.com/synesissoftware/libCLImate.Go
 
-go 1.23.6
+go 1.21
 
 require (
-	github.com/stretchr/testify v1.10.0
-	github.com/synesissoftware/ANGoLS v0.6.0-alpha1
-	github.com/synesissoftware/CLASP.Go v0.17.0
-	github.com/synesissoftware/ver2go v0.1.2
+	github.com/stretchr/testify v1.11.1
+	github.com/synesissoftware/ANGoLS v0.10.0
+	github.com/synesissoftware/CLASP.Go v0.17.1
+	github.com/synesissoftware/ver2go v0.1.3
 )
 
 require (
