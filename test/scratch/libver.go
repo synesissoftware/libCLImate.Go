@@ -2,6 +2,7 @@ package main
 
 import (
 	libclimate "github.com/synesissoftware/libCLImate.Go"
+
 	ver2go "github.com/synesissoftware/ver2go"
 
 	"fmt"
