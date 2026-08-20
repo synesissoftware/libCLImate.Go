@@ -1,6 +1,22 @@
 # libCLImate.Go - Changes <!-- omit in toc -->
 
 
+## 0.8.2 - 20th August 2026
+
+* added **Version()** (replacing the **Version** constant), formed by **ver2go.CombineVersion()**;
+* documented **VersionString()**;
+* **VersionAB** now uses **ver2go.Release**;
+* updated **ver2go** to 0.2.0-beta1;
+* updated **ANGoLS** to 0.11.0;
+* updated **CLASP.Go** to 0.18.0;
+* updated **test/scratch/libver.go** to use **VersionString()**;
+* CI modernisation (matrix + lint);
+* CI reliability fixes (macOS test linking; golangci-lint config verification disabled in CI);
+* boilerplate additions (scripts, markdown docs, project identity);
+* removed retired Go Report Card badge from README;
+* version string updated for the 0.8.2 release;
+
+
 ## 0.8.2-beta1 - 18th August 2025
 
 * GitHub Actions;

@@ -1,10 +1,11 @@
 package libclimate_test
 
 import (
-	angols_slices "github.com/synesissoftware/ANGoLS/slices"
-	clasp "github.com/synesissoftware/CLASP.Go"
 	libclimate "github.com/synesissoftware/libCLImate.Go"
 	"github.com/synesissoftware/libCLImate.Go/internal"
+
+	angols_slices "github.com/synesissoftware/ANGoLS/slices"
+	clasp "github.com/synesissoftware/CLASP.Go"
 
 	"bytes"
 	"fmt"

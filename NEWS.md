@@ -3,7 +3,7 @@
 
 | Date               | News Item                                                                                                             |
 | ------------------ | --------------------------------------------------------------------------------------------------------------------- |
-| 23rd August 2026   | Release of [**libCLImate.Go** 0.8.2](https://github.com/synesissoftware/libCLImate.Go/releases/tag/0.8.2)             |
+| 20th August 2026   | Release of [**libCLImate.Go** 0.8.2](https://github.com/synesissoftware/libCLImate.Go/releases/tag/0.8.2)             |
 | 18th August 2025   | Release of [**libCLImate.Go** 0.8.2-beta1](https://github.com/synesissoftware/libCLImate.Go/releases/tag/0.8.2-beta1) |
 | 12th March 2025    | Release of **libCLImate.Go** 0.8.1                                                                                    |
 | 4th March 2025     | Release of **libCLImate.Go** 0.8.0-beta1                                                                              |

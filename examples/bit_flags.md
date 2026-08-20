@@ -12,11 +12,10 @@ Example illustrating assocation of flag specifications with bit flags and (optio
 package main
 
 import (
-	"fmt"
-
-	clasp "github.com/synesissoftware/CLASP.Go"
+  clasp "github.com/synesissoftware/CLASP.Go"
 	libclimate "github.com/synesissoftware/libCLImate.Go"
 
+	"fmt"
 	"os"
 )
 

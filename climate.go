@@ -10,8 +10,9 @@
 package libclimate
 
 import (
-	clasp "github.com/synesissoftware/CLASP.Go"
 	"github.com/synesissoftware/libCLImate.Go/internal"
+
+	clasp "github.com/synesissoftware/CLASP.Go"
 
 	"fmt"
 	"io"

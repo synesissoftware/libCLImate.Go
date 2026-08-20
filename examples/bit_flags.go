@@ -3,11 +3,10 @@
 package main
 
 import (
-	"fmt"
-
 	clasp "github.com/synesissoftware/CLASP.Go"
 	libclimate "github.com/synesissoftware/libCLImate.Go"
 
+	"fmt"
 	"os"
 )
 
