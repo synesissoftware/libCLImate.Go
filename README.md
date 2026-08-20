@@ -7,18 +7,7 @@
 [![GitHub release](https://img.shields.io/github/v/release/synesissoftware/libCLImate.Go.svg)](https://github.com/synesissoftware/libCLImate.Go/releases/latest)
 [![Last Commit](https://img.shields.io/github/last-commit/synesissoftware/libCLImate.Go)](https://github.com/synesissoftware/libCLImate.Go/commits/master)
 [![Go](https://github.com/synesissoftware/libCLImate.Go/actions/workflows/go.yml/badge.svg)](https://github.com/synesissoftware/libCLImate.Go/actions/workflows/go.yml)
-[![Go Report Card](https://goreportcard.com/badge/github.com/synesissoftware/libCLImate.Go)](https://goreportcard.com/report/github.com/synesissoftware/libCLImate.Go)
 [![Go Reference](https://pkg.go.dev/badge/github.com/synesissoftware/libCLImate.Go.svg)](https://pkg.go.dev/github.com/synesissoftware/libCLImate.Go)
-
-
-## Introduction
-
-**libCLImate** is a **C**ommand-**L**ine **I**nterface boilerplate
-mini-framework, which encapsulates the common aspects of Command-Line
-Interface boilerplate. The first
-[libCLImate was a C/C++ library](https://github.com/synesissoftware/libCLImate/).
-There have been several implementations in other languages. **libCLImate.Go** is the
-**Go** version.
 
 
 ## Table of Contents <!-- omit in toc -->
@@ -35,6 +24,16 @@ There have been several implementations in other languages. **libCLImate.Go** is
 		- [Development/Testing Dependencies](#developmenttesting-dependencies)
 	- [Related projects](#related-projects)
 	- [License](#license)
+
+
+## Introduction
+
+**libCLImate** is a **C**ommand-**L**ine **I**nterface boilerplate
+mini-framework, which encapsulates the common aspects of Command-Line
+Interface boilerplate. The first
+[libCLImate was a C/C++ library](https://github.com/synesissoftware/libCLImate/).
+There have been several implementations in other languages. **libCLImate.Go** is the
+**Go** version.
 
 
 ## Background
@@ -226,7 +225,7 @@ Defect reports, feature requests, and pull requests are welcome on https://githu
 
 #### Development/Testing Dependencies
 
-* [**testify**](github.com/stretchr/testify);
+* [**testify**](https://github.com/stretchr/testify);
 * [**ANGoLS**](https://github.com/synesissoftware/ANGoLS/);
 
 

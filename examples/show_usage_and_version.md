@@ -1,4 +1,4 @@
-# libCLImate.Go Example - **show_usage_and_version**
+# libCLImate.Go - Example - **show_usage_and_version**
 
 ## Summary
 

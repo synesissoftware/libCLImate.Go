@@ -1,8 +1,9 @@
 package libclimate_test
 
 import (
-	"github.com/stretchr/testify/require"
 	libclimate "github.com/synesissoftware/libCLImate.Go"
+
+	"github.com/stretchr/testify/require"
 
 	"testing"
 )

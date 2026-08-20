@@ -4,14 +4,15 @@
 
 /*
  * Created: 22nd March 2019
- * Updated: 18th August 2025
+ * Updated: 20th August 2026
  */
 
 package libclimate
 
 import (
-	clasp "github.com/synesissoftware/CLASP.Go"
 	"github.com/synesissoftware/libCLImate.Go/internal"
+
+	clasp "github.com/synesissoftware/CLASP.Go"
 
 	"fmt"
 	"io"
@@ -537,7 +538,6 @@ func (result Result) validateValues2(stream io.Writer, min, max int) {
 // the specified flags and options
 func (result Result) Verify(options ...any) {
 
-	var err error
 	var parseFlags ParseFlag
 
 	stream, _ := parse_Stream_from_options_(options...)
@@ -550,10 +550,7 @@ func (result Result) Verify(options ...any) {
 		stream = os.Stderr
 	}
 
-	if err == nil {
-
-		parseFlags, err = parse_ParseFlags_from_options_(options...)
-	}
+	parseFlags, _ = parse_ParseFlags_from_options_(options...)
 	parseFlags |= result.parseFlags
 
 	if 0 == (ParseFlag_DontCheckUnused & parseFlags) {

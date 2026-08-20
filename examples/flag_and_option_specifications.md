@@ -1,4 +1,4 @@
-# libCLImate.Go Example - **flag_and_option_specifications**
+# libCLImate.Go - Example - **flag_and_option_specifications**
 
 ## Summary
 
