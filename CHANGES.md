@@ -10,6 +10,7 @@
 * updated **ANGoLS** to 0.11.0;
 * updated **CLASP.Go** to 0.18.0;
 * updated **test/scratch/libver.go** to use **VersionString()**;
+* added **examples/libver** program;
 * CI modernisation (matrix + lint);
 * fixed **golangci-lint** issues in **climate.go** (**ineffassign**) and **test/scratch/libver.go** (**gci**);
 * CI reliability fixes (macOS test linking; golangci-lint config verification disabled in CI);
